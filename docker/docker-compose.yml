@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  # ── ArgusX API ──────────────────────────────────────────────────────────────
+  argusx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: argusx-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://argusx:argusx_pass@postgres:5432/argusx
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_ENABLED=true
+      - LOG_JSON=true
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - argusx-net
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: argusx-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: argusx
+      POSTGRES_USER: argusx
+      POSTGRES_PASSWORD: argusx_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U argusx -d argusx"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - argusx-net
+
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: argusx-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - argusx-net
+
+volumes:
+  postgres_data:
+
+networks:
+  argusx-net:
+    driver: bridge

@@ -1,0 +1,1 @@
+"""ArgusX detection layer"""

@@ -1,0 +1,81 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# ─── Virtual Environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.conda/
+pip-wheel-metadata/
+
+# ─── Environment & Secrets ────────────────────────────────────────────────────
+.env
+# Keep .env.example (safe template — no secrets)
+
+# ─── Database ─────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+argusx.db
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+firewall.log
+threat_log.txt
+
+# ─── Large Datasets (NOT required at runtime) ─────────────────────────────────
+*.csv
+synthetic_adversarial_prompts.csv
+parsed_cve_data.csv
+relevant_exploit_data.csv
+files_exploits.csv
+
+# CVE JSON dumps (100–150 MB each)
+cve*.json
+cve *.json.json
+
+# ─── ML Model Artifacts ── KEEP .pkl files ────────────────────────────────────
+# behavioral_model.pkl  ← INCLUDED (required at runtime)
+# anomaly_detector.pkl  ← INCLUDED (required at runtime)
+# vectorizer.pkl        ← INCLUDED (required at runtime)
+
+# ─── IDE & Editor ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+.cursor/
+
+# ─── Testing & Coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+# Keep Dockerfile and docker-compose.yml
+docker/logs/
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+token.pickle
+credentials.json

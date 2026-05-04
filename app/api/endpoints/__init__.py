@@ -1,0 +1,1 @@
+"""ArgusX API endpoints package"""
