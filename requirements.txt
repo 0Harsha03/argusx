@@ -25,6 +25,10 @@ python-json-logger==2.0.7
 # Config
 python-dotenv==1.0.1
 
+# LLM Providers (optional — system falls back to mock if not installed)
+openai>=1.0.0              # Required for _OpenAIBackend; skip if mock-only mode is acceptable
+google-genai>=2.0.0        # Required for _GeminiBackend; priority 1 in provider chain
+
 # Testing
 pytest==8.3.4
 pytest-asyncio==0.24.0

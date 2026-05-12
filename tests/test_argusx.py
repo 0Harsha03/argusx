@@ -428,6 +428,184 @@ class TestLLMService:
         assert svc.generate("anything") == "fixed-output"
 
 
+# ─── Phase 3: LLM Provider Selection Tests ───────────────────────────────────
+
+class TestLLMProviderSelection:
+    """
+    Unit tests for the three-tier provider priority logic in _build_default_backend().
+
+    All tests use monkeypatching / environment isolation — no real API calls.
+    Provider priority: Gemini (1) → OpenAI (2) → Mock fallback (3).
+    """
+
+    def _make_service(self, env_overrides: dict) -> "LLMService":  # noqa: F821
+        """
+        Build an LLMService with a clean env snapshot containing only the
+        supplied overrides (plus any non-LLM vars already in os.environ).
+        """
+        import os
+        from app.services.llm_service import LLMService
+
+        # Strip existing provider keys so tests are fully isolated
+        clean_env = {
+            k: v for k, v in os.environ.items()
+            if k not in ("GEMINI_API_KEY", "OPENAI_API_KEY")
+        }
+        clean_env.update(env_overrides)
+
+        original = os.environ.copy()
+        os.environ.clear()
+        os.environ.update(clean_env)
+        try:
+            return LLMService()
+        finally:
+            os.environ.clear()
+            os.environ.update(original)
+
+    # ── Gemini backend selected when GEMINI_API_KEY is present ───────────────
+
+    def test_gemini_selected_when_key_present(self, monkeypatch):
+        """_GeminiBackend should be chosen when GEMINI_API_KEY is set and SDK works."""
+        from unittest.mock import MagicMock, patch
+        from app.services import llm_service
+
+        fake_genai = MagicMock()
+        fake_client = MagicMock()
+        fake_genai.Client.return_value = fake_client
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-gemini-key")
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+        with patch.dict("sys.modules", {"google.genai": fake_genai}):
+            svc = llm_service.LLMService()
+
+        assert "Gemini" in svc.active_backend_name
+
+    # ── OpenAI fallback when GEMINI_API_KEY absent ────────────────────────────
+
+    def test_openai_selected_when_gemini_key_absent(self, monkeypatch):
+        """_OpenAIBackend should be chosen when only OPENAI_API_KEY is set."""
+        from unittest.mock import MagicMock, patch
+        from app.services import llm_service
+
+        fake_openai_client = MagicMock()
+        fake_openai_module = MagicMock()
+        fake_openai_module.OpenAI.return_value = fake_openai_client
+
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.setenv("OPENAI_API_KEY", "fake-openai-key")
+
+        with patch.dict("sys.modules", {"openai": fake_openai_module}):
+            svc = llm_service.LLMService()
+
+        assert "OpenAI" in svc.active_backend_name
+
+    # ── Mock fallback when both keys absent ───────────────────────────────────
+
+    def test_mock_selected_when_no_keys_present(self, monkeypatch):
+        """_MockLLMBackend must be chosen when neither key is in the environment."""
+        from app.services import llm_service
+
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+        svc = llm_service.LLMService()
+        assert "Mock" in svc.active_backend_name
+
+    # ── Runtime fallback: backend error → safe string returned ───────────────
+
+    def test_runtime_backend_error_returns_safe_string(self, monkeypatch):
+        """
+        When the active backend raises RuntimeError during generate(), the
+        LLMService must NOT propagate the error — it must return a safe fallback
+        string so /protect never crashes.
+        """
+        from app.services.llm_service import LLMService, _LLMBackend
+
+        class _BrokenBackend(_LLMBackend):
+            def generate(self, prompt: str) -> str:
+                raise RuntimeError("Simulated quota exceeded")
+
+        svc = LLMService(backend=_BrokenBackend())
+        result = svc.generate("Hello")
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    # ── Provider priority order: Gemini > OpenAI ─────────────────────────────
+
+    def test_gemini_takes_priority_over_openai(self, monkeypatch):
+        """
+        When both GEMINI_API_KEY and OPENAI_API_KEY are set, Gemini must win.
+        """
+        from unittest.mock import MagicMock, patch
+        from app.services import llm_service
+
+        fake_genai = MagicMock()
+        fake_client = MagicMock()
+        fake_genai.Client.return_value = fake_client
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-gemini-key")
+        monkeypatch.setenv("OPENAI_API_KEY", "fake-openai-key")
+
+        with patch.dict("sys.modules", {"google.genai": fake_genai}):
+            svc = llm_service.LLMService()
+
+        assert "Gemini" in svc.active_backend_name
+
+    # ── Gemini init failure falls through to OpenAI ───────────────────────────
+
+    def test_gemini_failure_falls_through_to_openai(self, monkeypatch):
+        """
+        If GEMINI_API_KEY is set but the SDK raises on init, OpenAI is tried next.
+        """
+        from unittest.mock import MagicMock, patch
+        from app.services import llm_service
+
+        # Gemini SDK raises on Client() instantiation (simulates bad key / network error)
+        fake_genai = MagicMock()
+        fake_genai.Client.side_effect = Exception("Gemini unavailable")
+
+        fake_openai_module = MagicMock()
+
+        monkeypatch.setenv("GEMINI_API_KEY", "bad-key")
+        monkeypatch.setenv("OPENAI_API_KEY", "fake-openai-key")
+
+        with patch.dict("sys.modules", {
+            "google.genai": fake_genai,
+            "openai": fake_openai_module,
+        }):
+            svc = llm_service.LLMService()
+
+        # Must not be Gemini (which failed); should be OpenAI or Mock
+        assert "Gemini" not in svc.active_backend_name
+
+    # ── Gemini generate() returns plain string ────────────────────────────────
+
+    def test_gemini_generate_returns_plain_string(self, monkeypatch):
+        """_GeminiBackend.generate() must return a non-empty plain string."""
+        from unittest.mock import MagicMock, patch
+        from app.services import llm_service
+
+        fake_response = MagicMock()
+        fake_response.text = "Paris is the capital of France."
+
+        fake_client = MagicMock()
+        fake_client.models.generate_content.return_value = fake_response
+
+        fake_genai = MagicMock()
+        fake_genai.Client.return_value = fake_client
+
+        monkeypatch.setenv("GEMINI_API_KEY", "fake-key")
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+        with patch.dict("sys.modules", {"google.genai": fake_genai}):
+            backend = llm_service._GeminiBackend()
+            result = backend.generate("What is the capital of France?")
+
+        assert isinstance(result, str)
+        assert "Paris" in result
+
+
 # ─── Phase 2: /protect Endpoint Integration Tests ────────────────────────────
 
 @pytest.mark.asyncio
