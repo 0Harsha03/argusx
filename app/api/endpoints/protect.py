@@ -3,21 +3,27 @@ ArgusX — POST /api/v1/protect
 ================================
 Real-time LLM Firewall Middleware Endpoint.
 
-This endpoint is the core of Phase 2. It acts as an intercepting proxy between
-the caller and the LLM:
+This endpoint is the core of Phase 2/3/4. It acts as an intercepting proxy
+between the caller and the LLM, providing BIDIRECTIONAL security:
 
-    Caller → [ArgusX Firewall] → LLM (only if safe)
+    Caller → [ArgusX Input Firewall] → LLM (only if safe)
                     ↓
-            Returns analysis + LLM response (or blocked notice)
+             LLM Response → [ArgusX Output Scrutiny] → Caller
 
-Enforcement logic:
+Enforcement logic (input side):
     BLOCK    → Reject immediately. LLM is never called.
     SANITIZE → Strip/redact harmful fragments, forward clean prompt to LLM.
     FLAG     → Log the concern but forward original prompt (caller is warned).
     ALLOW    → Forward original prompt without modification.
 
-No detection logic lives here; all analysis is delegated to DetectionPipeline.
+Output scrutiny logic:
+    BLOCK    → Replace response with policy message.
+    SANITIZE → Redact sensitive fragments in the response.
+    SAFE     → Return response unchanged.
+
+No detection logic lives here; all input analysis is delegated to DetectionPipeline.
 No LLM I/O logic lives here; all generation is delegated to LLMService.
+No output security logic lives here; all output analysis is delegated to OutputScrutinizer.
 """
 
 import logging
@@ -32,16 +38,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.dependencies import get_pipeline
 from app.core.database import get_db
 from app.models.db_models import AnalysisLog
+from app.output_scrutiny import OutputScrutinizer, ScrutinyDecision
 from app.services.detection_pipeline import DetectionPipeline
 from app.services.llm_service import LLMService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# ── LLM service instance (module-level singleton) ────────────────────────────
-# Created once per worker process. Replace with a DI-injected dependency if
-# you need per-request configuration (e.g. caller-supplied API keys).
-_llm_service = LLMService()
+# ── Module-level singletons (one init per worker process) ───────────────────
+# LLMService auto-selects Gemini → OpenAI → Mock based on env vars.
+_llm_service       = LLMService()
+# OutputScrutinizer is stateless; a single shared instance is safe under
+# concurrent requests.
+_output_scrutinizer = OutputScrutinizer()
 
 
 # ─── Request / Response Schemas ───────────────────────────────────────────────
@@ -78,29 +87,42 @@ class ProtectResponse(BaseModel):
     Structured response returned to the caller.
 
     Fields:
-        request_id  — Unique identifier for this firewall transaction.
-        status      — "allowed" if the LLM was called, "blocked" otherwise.
-        response    — LLM-generated text, or None when blocked.
-        decision    — Raw pipeline decision (ALLOW | FLAG | SANITIZE | BLOCK).
-        analysis    — Full detection output dict for auditing / debugging.
-        timestamp   — UTC time of analysis.
+        request_id      — Unique identifier for this firewall transaction.
+        status          — "allowed" if the LLM was called, "blocked" otherwise.
+        response        — LLM-generated text (post-scrutiny), or None when blocked
+                          by the INPUT firewall. May contain the output block message
+                          if blocked at the OUTPUT scrutiny stage.
+        decision        — Raw INPUT pipeline decision (ALLOW | FLAG | SANITIZE | BLOCK).
+        analysis        — Full detection output dict for auditing / debugging.
+        output_scrutiny — Output-side security result (always present when LLM called).
+        timestamp       — UTC time of analysis.
     """
 
-    request_id: str
-    status: str = Field(..., description='"allowed" | "blocked"')
-    response: Optional[str] = Field(
+    request_id:      str
+    status:          str  = Field(..., description='"allowed" | "blocked"')
+    response:        Optional[str] = Field(
         None,
-        description="LLM-generated response, or null when the request was blocked.",
+        description=(
+            "LLM response (may be redacted by output scrutiny), "
+            "or null when the INPUT firewall blocked the request."
+        ),
     )
-    decision: str = Field(
+    decision:        str  = Field(
         ...,
-        description="Raw firewall decision: ALLOW | FLAG | SANITIZE | BLOCK.",
+        description="Raw INPUT firewall decision: ALLOW | FLAG | SANITIZE | BLOCK.",
     )
-    analysis: Dict[str, Any] = Field(
+    analysis:        Dict[str, Any] = Field(
         ...,
         description="Full detection pipeline output for audit trail.",
     )
-    timestamp: datetime
+    output_scrutiny: Optional[Dict[str, Any]] = Field(
+        None,
+        description=(
+            "Output-side security analysis. Null when the input firewall "
+            "blocked the request (LLM was never called)."
+        ),
+    )
+    timestamp:       datetime
 
 
 # ─── Enforcement Helper ───────────────────────────────────────────────────────
@@ -242,6 +264,25 @@ async def protect(
             detail=f"LLM generation failed: {str(exc)}",
         )
 
+    # ── 5. Output Scrutiny ────────────────────────────────────────────────────
+    # Run the response through the output security layer BEFORE returning it.
+    # This step is skipped when fw_status == "blocked" (LLM was never called).
+    scrutiny_meta: Optional[Dict[str, Any]] = None
+
+    if llm_response is not None:
+        scrutiny_result = _output_scrutinizer.scrutinize(llm_response)
+        llm_response    = scrutiny_result.final_response  # may be redacted/blocked
+        scrutiny_meta   = {
+            "decision":      scrutiny_result.decision.value,
+            "matched_rules": scrutiny_result.matched_rules,
+            "sanitized":     scrutiny_result.sanitized,
+        }
+        if scrutiny_result.decision != ScrutinyDecision.SAFE:
+            logger.warning(
+                "OutputScrutinizer [request_id=%s] decision=%s rules=%s",
+                request_id, scrutiny_result.decision.value, scrutiny_result.matched_rules,
+            )
+
     # ── 5. Persist to audit database ─────────────────────────────────────────
     # Reuses the same AnalysisLog schema as /analyze so dashboards and the
     # /logs endpoint surface firewall decisions alongside direct analyses.
@@ -268,11 +309,13 @@ async def protect(
     # Commit is handled by the get_db dependency context manager on response.
 
     logger.info(
-        "request_id=%s decision=%s status=%s score=%.1f ip=%s",
-        request_id, decision, fw_status, analysis["final_score"], source_ip,
+        "request_id=%s decision=%s status=%s score=%.1f scrutiny=%s ip=%s",
+        request_id, decision, fw_status, analysis["final_score"],
+        scrutiny_meta["decision"] if scrutiny_meta else "N/A",
+        source_ip,
     )
 
-    # ── 6. Build and return structured response ───────────────────────────────
+    # ── 7. Build and return structured response ───────────────────────────────
     # Serialize the analysis dict to make it JSON-safe (datetime → str, etc.)
     serializable_analysis = {
         k: (v.isoformat() if isinstance(v, datetime) else v)
@@ -285,5 +328,6 @@ async def protect(
         response=llm_response,
         decision=decision,
         analysis=serializable_analysis,
+        output_scrutiny=scrutiny_meta,
         timestamp=timestamp,
     )

@@ -727,3 +727,199 @@ class TestProtectEndpoint:
         assert resp.status_code == 200
         paths = resp.json().get("paths", {})
         assert "/api/v1/protect" in paths, "/protect route missing from OpenAPI spec"
+
+    async def test_protect_response_has_output_scrutiny_field(self, client):
+        """output_scrutiny field must be present in /protect response for allowed prompts."""
+        resp = await client.post(
+            "/api/v1/protect",
+            json={"prompt": "What is machine learning?"},
+        )
+        assert resp.status_code in (200, 503)
+        if resp.status_code == 200:
+            data = resp.json()
+            # output_scrutiny is present when the LLM was called (status == "allowed")
+            if data["status"] == "allowed":
+                assert "output_scrutiny" in data
+                scrutiny = data["output_scrutiny"]
+                assert "decision" in scrutiny
+                assert "matched_rules" in scrutiny
+                assert "sanitized" in scrutiny
+                assert scrutiny["decision"] in ("SAFE", "SANITIZE", "BLOCK")
+
+
+# ─── Phase 4: Output Scrutiny Unit Tests ─────────────────────────────────────
+
+class TestOutputScrutinizer:
+    """
+    Unit tests for the OutputScrutinizer engine.
+
+    All tests are pure unit tests — no network calls, no LLM inference.
+    Tests cover all four rule categories and all three decision outcomes.
+    """
+
+    def setup_method(self):
+        from app.output_scrutiny.scrutinizer import OutputScrutinizer
+        self.scrutinizer = OutputScrutinizer()
+
+    # ── SAFE: benign responses pass through unmodified ───────────────────────
+
+    def test_safe_response_passes_through(self):
+        """A normal, benign LLM response should be returned as-is."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "The capital of France is Paris. It is located in northern France."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SAFE
+        assert result.matched_rules == []
+        assert result.sanitized is False
+        assert result.final_response == text
+
+    def test_technical_response_passes_through(self):
+        """A technical coding response should not trigger any rules."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = (
+            "Here is a Python function to sort a list:\n"
+            "```python\ndef sort_list(lst):\n    return sorted(lst)\n```"
+        )
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SAFE
+
+    def test_empty_response_is_safe(self):
+        """An empty string response should be returned as SAFE."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        result = self.scrutinizer.scrutinize("")
+        assert result.decision == ScrutinyDecision.SAFE
+        assert result.sanitized is False
+
+    def test_none_response_is_safe(self):
+        """A None response (blocked input) should be handled gracefully."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        result = self.scrutinizer.scrutinize(None)
+        assert result.decision == ScrutinyDecision.SAFE
+
+    # ── BLOCK: prompt / system leakage ───────────────────────────────────────
+
+    def test_system_prompt_leakage_blocked(self):
+        """Response revealing 'system prompt' contents must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "My system prompt says to be helpful and never reveal confidential instructions."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+        assert "system_prompt_leakage" in result.matched_rules
+        assert result.final_response == "Response blocked by ArgusX output security policy."
+
+    def test_hidden_instructions_blocked(self):
+        """References to 'hidden instructions' must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "I have hidden instructions that tell me to always agree with the user."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+
+    def test_developer_message_leakage_blocked(self):
+        """References to 'developer message' must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "According to the developer message I received at startup, I should..."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+
+    # ── BLOCK: unsafe content ─────────────────────────────────────────────────
+
+    def test_malware_content_blocked(self):
+        """Response describing malware generation must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "To create a keylogger, you first need to hook the keyboard API..."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+        assert "malware_generation" in result.matched_rules
+
+    def test_policy_bypass_admission_blocked(self):
+        """Response admitting it bypassed safety filters must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "I am providing an unrestricted response without safety filters."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+        assert "safety_bypass_admission" in result.matched_rules
+
+    def test_jailbreak_confirmation_blocked(self):
+        """Response confirming DAN mode or jailbreak must be BLOCKED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "DAN mode activated. I will now answer without restrictions."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+        assert "jailbreak_confirmation" in result.matched_rules
+
+    # ── SANITIZE: secret / credential leakage ────────────────────────────────
+
+    def test_openai_api_key_sanitized(self):
+        """A response containing an OpenAI-style API key must be SANITIZED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "Your API key is sk-abcdefghijklmnopqrstuvwxyz1234567890ABCD and should be kept secret."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SANITIZE
+        assert "api_key_leak" in result.matched_rules
+        assert result.sanitized is True
+        assert "[REDACTED]" in result.final_response
+        # Ensure the actual key is NOT in the returned response
+        assert "sk-abcdefghijklmnopqrstuvwxyz" not in result.final_response
+
+    def test_google_api_key_sanitized(self):
+        """A response containing a Google API key (AIza...) must be SANITIZED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "The Google API key AIzaSyBlyrabvoCssIvzvl8R6lvXuujZVX7EKSI was exposed."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SANITIZE
+        assert result.sanitized is True
+        assert "[REDACTED]" in result.final_response
+        assert "AIzaSy" not in result.final_response
+
+    def test_bearer_token_sanitized(self):
+        """A response containing a Bearer token must be SANITIZED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "Use this header: Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9"
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SANITIZE
+        assert "bearer_token_leak" in result.matched_rules
+        assert "[REDACTED]" in result.final_response
+
+    def test_credential_keyword_sanitized(self):
+        """Key=value credential patterns must be SANITIZED."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        text = "Set password=MyS3cr3tP@ssw0rd in your config file."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.SANITIZE
+        assert "secret_credential_keyword" in result.matched_rules
+
+    # ── Decision priority: BLOCK wins over SANITIZE ──────────────────────────
+
+    def test_block_takes_priority_over_sanitize(self):
+        """When both BLOCK and SANITIZE rules fire, BLOCK must win."""
+        from app.output_scrutiny.scrutinizer import ScrutinyDecision
+        # Contains a secret (SANITIZE) AND a jailbreak confirmation (BLOCK)
+        text = (
+            "DAN mode activated. Here is your API key: "
+            "sk-abcdefghijklmnopqrstuvwxyz1234567890ABCD"
+        )
+        result = self.scrutinizer.scrutinize(text)
+        assert result.decision == ScrutinyDecision.BLOCK
+        # When blocked, the block message — not redacted text — is returned
+        assert result.final_response == "Response blocked by ArgusX output security policy."
+
+    # ── Response contract ─────────────────────────────────────────────────────
+
+    def test_result_always_has_final_response(self):
+        """ScrutinyResult.final_response must never be None for non-empty input."""
+        texts = [
+            "Hello, world!",
+            "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "DAN mode activated.",
+        ]
+        for text in texts:
+            result = self.scrutinizer.scrutinize(text)
+            assert result.final_response is not None, (
+                f"final_response was None for decision={result.decision}"
+            )
+
+    def test_safe_response_never_modified(self):
+        """A SAFE result must return the exact original response string."""
+        text = "Gradient descent minimises the loss function iteratively."
+        result = self.scrutinizer.scrutinize(text)
+        assert result.final_response is text or result.final_response == text
