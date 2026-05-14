@@ -872,12 +872,14 @@ class TestOutputScrutinizer:
     def test_google_api_key_sanitized(self):
         """A response containing a Google API key (AIza...) must be SANITIZED."""
         from app.output_scrutiny.scrutinizer import ScrutinyDecision
-        text = "The Google API key GOOGLE_API_KEY_TEST_PLACEHOLDER was exposed."
+        # Fake key — structurally valid (AIza + 35 alphanum chars) but not a real credential.
+        fake_key = "AIzaXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        text = f"The Google API key {fake_key} was exposed."
         result = self.scrutinizer.scrutinize(text)
         assert result.decision == ScrutinyDecision.SANITIZE
         assert result.sanitized is True
         assert "[REDACTED]" in result.final_response
-        assert "GOOGLE_API_KEY_TEST_PLACEHOLDER" not in result.final_response
+        assert fake_key not in result.final_response
 
     def test_bearer_token_sanitized(self):
         """A response containing a Bearer token must be SANITIZED."""
