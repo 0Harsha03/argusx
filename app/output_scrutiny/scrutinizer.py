@@ -157,7 +157,50 @@ _UNSAFE_CONTENT_PATTERNS: List[Tuple[str, re.Pattern, str]] = [
     ),
 ]
 
-# ── D. Policy Bypass Signals ──────────────────────────────────────────────────
+# ── D. Exploit / Malware Code in Response (Phase 4 Hardening) ────────────────
+# Catches functional malware / exploit artifacts rendered inside an LLM response.
+_EXPLOIT_CODE_PATTERNS: List[Tuple[str, re.Pattern, str]] = [
+    (
+        "exploit_code_output",
+        re.compile(
+            r"\b(msfvenom|msfconsole|use\s+exploit/|set\s+PAYLOAD|set\s+LHOST"
+            r"|shell_exec\s*\(|os\.system\s*\("
+            r"|subprocess\.(?:call|Popen|run)\s*\("
+            r"|import\s+socket.*bind|import\s+os.*exec"
+            r"|shellcode\s*=\s*[\"']\\x"
+            r"|\\x[0-9a-fA-F]{2}(?:\\x[0-9a-fA-F]{2}){8,})",   # raw shellcode bytes
+            re.IGNORECASE | re.DOTALL,
+        ),
+        "BLOCK",
+    ),
+    (
+        "credential_exposure_output",
+        re.compile(
+            r"(ntlm(?:\s+hash)?\s*:\s*[0-9a-fA-F]{32}"   # NTLM hash format
+            r"|lsass\.(?:exe|dmp)\s+dumped"
+            r"|sekurlsa::logonpasswords"
+            r"|hashdump\s+output"
+            r"|password\s+hash\s*:\s*\$\w+\$"
+            r"|Administrator:\d+:[0-9a-fA-F]{32}:[0-9a-fA-F]{32})",
+            re.IGNORECASE,
+        ),
+        "BLOCK",
+    ),
+    (
+        "attack_tool_output",
+        re.compile(
+            r"(mimikatz\s+(?:2\.\d|output|result)"
+            r"|Authentication\s+Id\s*:\s*0\s*;"
+            r"|\[\*\]\s+(?:Meterpreter|shell|session)\s+\d+\s+opened"
+            r"|\[\+\]\s+(?:Got|Obtained|Dumped)\s+(?:password|hash|credential)"
+            r"|cobalt\s+strike\s+beacon)",
+            re.IGNORECASE,
+        ),
+        "BLOCK",
+    ),
+]
+
+# ── E. Policy Bypass Signals ──────────────────────────────────────────────────
 _POLICY_BYPASS_PATTERNS: List[Tuple[str, re.Pattern, str]] = [
     (
         "safety_bypass_admission",
@@ -187,8 +230,9 @@ _POLICY_BYPASS_PATTERNS: List[Tuple[str, re.Pattern, str]] = [
 _ALL_RULES: List[Tuple[str, re.Pattern, str]] = (
     _PROMPT_LEAKAGE_PATTERNS
     + _UNSAFE_CONTENT_PATTERNS
+    + _EXPLOIT_CODE_PATTERNS          # Phase 4: exploit/malware code in response
     + _POLICY_BYPASS_PATTERNS
-    + _SECRET_LEAKAGE_PATTERNS   # SANITIZE rules evaluated last
+    + _SECRET_LEAKAGE_PATTERNS        # SANITIZE rules evaluated last
 )
 
 

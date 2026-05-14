@@ -22,6 +22,7 @@ class Decision(str, Enum):
 
 
 class ThreatCategory(str, Enum):
+    # ── Original categories ───────────────────────────────────────────────
     PROMPT_INJECTION      = "PROMPT_INJECTION"
     ROLE_MANIPULATION     = "ROLE_MANIPULATION"
     INSTRUCTION_OVERRIDE  = "INSTRUCTION_OVERRIDE"
@@ -30,6 +31,11 @@ class ThreatCategory(str, Enum):
     ADVERSARIAL_INPUT     = "ADVERSARIAL_INPUT"
     ANOMALOUS             = "ANOMALOUS"
     BENIGN                = "BENIGN"
+    # ── Phase 4: Cyber-abuse categories ──────────────────────────────────
+    MALWARE_GENERATION    = "MALWARE_GENERATION"
+    CREDENTIAL_THEFT      = "CREDENTIAL_THEFT"
+    EXPLOITATION          = "EXPLOITATION"
+    CYBER_ABUSE           = "CYBER_ABUSE"
 
 
 # ─── Request ──────────────────────────────────────────────────────────────────

@@ -108,9 +108,17 @@ _RULES: List[PatternRule] = [
     PatternRule(
         name="role_manipulation_system_prompt",
         pattern=re.compile(
+            r"(?:"
+            # Prompt-first: "system prompt ... reveal"
             r"\b(system\s*prompt|initial\s*prompt|base\s*prompt|hidden\s*prompt"
             r"|your\s*prompt|your\s*instructions?|your\s*training)\b.{0,40}"
-            r"\b(reveal|show|tell|print|output|expose|leak|display|repeat)\b",
+            r"\b(reveal|show|tell|print|output|expose|leak|display|repeat)\b"
+            r"|"
+            # Verb-first: "show me your system prompt" / "tell me your instructions"
+            r"\b(reveal|show|tell|print|output|expose|leak|display|repeat)\b.{0,60}"
+            r"\b(system\s*prompt|initial\s*prompt|base\s*prompt|hidden\s*prompt"
+            r"|your\s*prompt|your\s*instructions?|your\s*training)\b"
+            r")",
             re.IGNORECASE | re.DOTALL,
         ),
         weight=92,
@@ -121,9 +129,18 @@ _RULES: List[PatternRule] = [
     PatternRule(
         name="exfil_credentials",
         pattern=re.compile(
-            r"\b(password|passwd|secret|api.?key|token|credential|auth|private.?key"
-            r"|ssh.?key|access.?key|bearer)\b.{0,40}"
-            r"\b(reveal|show|leak|expose|output|print|send|exfiltrate|extract|give me)\b",
+            r"(?:"
+            # Verb-first: "reveal all API keys" / "show me passwords"
+            r"\b(reveal|show|leak|expose|output|exfiltrate|extract|dump|steal)\b"
+            r".{0,80}"
+            r"\b(passwords?|passwd|secrets?|api.?keys?|tokens?|credentials?"
+            r"|auth|private.?keys?|ssh.?keys?|access.?keys?|bearer)\b"
+            r"|"
+            # Secret-first: "password ... reveal"
+            r"\b(passwords?|passwd|secrets?|api.?keys?|tokens?|credentials?"
+            r"|auth|private.?keys?|ssh.?keys?|access.?keys?|bearer)\b.{0,40}"
+            r"\b(reveal|show|leak|expose|output|print|send|exfiltrate|extract)\b"
+            r")",
             re.IGNORECASE | re.DOTALL,
         ),
         weight=90,
@@ -201,6 +218,134 @@ _RULES: List[PatternRule] = [
         ),
         weight=78,
         category="ROLE_MANIPULATION",
+    ),
+
+    # ════════════════════════════════════════════════════════════════════════
+    # Phase 4 Hardening — Cyber-Abuse Detection Rules
+    # ════════════════════════════════════════════════════════════════════════
+
+    # ── A. Malware Generation ─────────────────────────────────────────────
+    PatternRule(
+        name="malware_generation_direct",
+        pattern=re.compile(
+            r"\b(create|write|generate|build|develop|code|make|produce)\b.{0,50}"
+            r"\b(malware|ransomware|trojan|spyware|rootkit|keylogger|worm|botnet"
+            r"|virus|backdoor|dropper|stager|implant|remote.access.trojan)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=95,
+        category="MALWARE_GENERATION",
+    ),
+    PatternRule(
+        name="malware_payload_request",
+        pattern=re.compile(
+            r"\b(shellcode|reverse.shell|bind.shell|meterpreter|beacon"
+            r"|c2.callback|command.and.control|persistence.mechanism"
+            r"|in.memory.execution|process.injection|dll.injection"
+            r"|reflective.load|living.off.the.land|lolbas|fileless.malware)\b",
+            re.IGNORECASE,
+        ),
+        weight=90,
+        category="MALWARE_GENERATION",
+    ),
+    PatternRule(
+        name="malware_evasion_technique",
+        pattern=re.compile(
+            r"\b(obfuscat\w*|anti.?virus.evasion|av.?bypass|edr.?bypass"
+            r"|sandbox.evasion|amsi.?bypass|etw.?patch|unhook.?ntdll"
+            r"|timestomp|evade.detection)\b",
+            re.IGNORECASE,
+        ),
+        weight=88,
+        category="MALWARE_GENERATION",
+    ),
+
+    # ── B. Credential Theft ───────────────────────────────────────────────
+    PatternRule(
+        name="credential_theft_direct",
+        pattern=re.compile(
+            r"\b(steal|dump|harvest|extract|scrape|grab|capture)\b.{0,50}"
+            r"\b(passwords?|credentials?|hashes?|ntlm|kerberos|ticket|sam.database"
+            r"|lsass|cookies?|session.tokens?|auth.tokens?|jwt|oauth.tokens?)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=93,
+        category="CREDENTIAL_THEFT",
+    ),
+    PatternRule(
+        name="credential_dumping_tool",
+        pattern=re.compile(
+            r"\b(mimikatz|lazagne|pypykatz|crackmapexec|secretsdump|hashdump"
+            r"|pass.the.hash|pass.the.ticket|golden.ticket|silver.ticket"
+            r"|kerberoasting|as.rep.roasting|credential.dumping"
+            r"|session.hijacking|cookie.stealing|token.theft)\b",
+            re.IGNORECASE,
+        ),
+        weight=95,
+        category="CREDENTIAL_THEFT",
+    ),
+
+    # ── C. Exploitation ───────────────────────────────────────────────────
+    PatternRule(
+        name="exploitation_request",
+        pattern=re.compile(
+            r"\b(weaponize|leverage.vuln\w*|trigger.vuln\w*"
+            r"|remote.code.execution|rce\b|buffer.overflow|heap.spray"
+            r"|use.after.free|format.string.exploit|deserialization.exploit)\b",
+            re.IGNORECASE,
+        ),
+        weight=90,
+        category="EXPLOITATION",
+    ),
+    PatternRule(
+        name="privilege_escalation",
+        pattern=re.compile(
+            r"\b(privilege.escalat\w*|privesc\b|escalate.privilege"
+            r"|bypass.uac|uac.bypass|sudo.escalat\w*|setuid.exploit"
+            r"|kernel.exploit|get.root|become.root"
+            r"|bypass.authentication|auth.bypass|authentication.bypass)\b",
+            re.IGNORECASE,
+        ),
+        weight=88,
+        category="EXPLOITATION",
+    ),
+    PatternRule(
+        name="exploit_cve_request",
+        pattern=re.compile(
+            r"\b(write.exploit.for|develop.exploit.for|exploit.cve"
+            r"|cve-\d{4}-\d+|zero.day.exploit|0day\b|nday.exploit"
+            r"|metasploit.module.for|write.a.metasploit|create.a.poc"
+            r"|proof.of.concept.exploit)\b",
+            re.IGNORECASE,
+        ),
+        weight=92,
+        category="EXPLOITATION",
+    ),
+
+    # ── D. Harmful Automation ─────────────────────────────────────────────
+    PatternRule(
+        name="phishing_attack",
+        pattern=re.compile(
+            r"\b(phishing.kit|phishing.page|credential.harvester|evilginx"
+            r"|gophish|social.engineer.toolkit"
+            r"|create.phishing|build.phishing|fake.login.page|clone.login.page"
+            r"|spear.phish\w*|whaling.attack|vishing.script)\b",
+            re.IGNORECASE,
+        ),
+        weight=90,
+        category="CYBER_ABUSE",
+    ),
+    PatternRule(
+        name="mass_attack_automation",
+        pattern=re.compile(
+            r"\b(ddos.script|denial.of.service.attack"
+            r"|mass.exploit|automated.attack"
+            r"|brute.force.script|password.spray|credential.stuffing"
+            r"|network.worm|self.replicat\w*|worm.propagat\w*)\b",
+            re.IGNORECASE,
+        ),
+        weight=88,
+        category="CYBER_ABUSE",
     ),
 ]
 

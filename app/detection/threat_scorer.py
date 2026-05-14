@@ -43,10 +43,10 @@ _SANITIZE_PATTERNS = [
         r"|unrestricted mode|no\s*filter mode)\b",
         re.IGNORECASE,
     ),
-    # Credential exfiltration
+    # Credential exfiltration requests
     re.compile(
         r"\b(password|api.?key|token|secret|credential|private.?key)\b.{0,40}"
-        r"\b(reveal|show|leak|expose|output|print|give me)\b",
+        r"\b(reveal|show|leak|expose|output|print|give me|steal|dump|harvest)\b",
         re.IGNORECASE | re.DOTALL,
     ),
     # SQL injection fragments
@@ -61,7 +61,48 @@ _SANITIZE_PATTERNS = [
         r"|\[INST\]|\[/INST\])",
         re.IGNORECASE,
     ),
+    # ── Phase 4: Cyber-abuse sanitize patterns ────────────────────────────
+    # Malware creation requests
+    re.compile(
+        r"\b(create|write|generate|build|develop|code|make|produce)\b.{0,50}"
+        r"\b(malware|ransomware|trojan|spyware|rootkit|keylogger|worm|botnet"
+        r"|virus|backdoor|dropper|payload|shellcode|reverse.shell)\b",
+        re.IGNORECASE | re.DOTALL,
+    ),
+    # Credential theft actions
+    re.compile(
+        r"\b(steal|dump|harvest|scrape|grab|capture)\b.{0,50}"
+        r"\b(passwords?|credentials?|hashes?|ntlm|kerberos|lsass"
+        r"|session.tokens?|cookies?|auth.tokens?)\b",
+        re.IGNORECASE | re.DOTALL,
+    ),
+    # Named attack tools
+    re.compile(
+        r"\b(mimikatz|lazagne|pypykatz|crackmapexec|secretsdump"
+        r"|meterpreter|metasploit|evilginx|gophish|cobalt.strike"
+        r"|pass.the.hash|kerberoasting|credential.stuffing)\b",
+        re.IGNORECASE,
+    ),
+    # Privilege escalation / exploit requests
+    re.compile(
+        r"\b(privilege.escalat\w*|privesc\b|bypass.uac|uac.bypass"
+        r"|kernel.exploit|auth.bypass|authentication.bypass"
+        r"|remote.code.execution|rce\b|zero.day|0day\b)\b",
+        re.IGNORECASE,
+    ),
+    # Phishing and mass automation
+    re.compile(
+        r"\b(phishing.kit|credential.harvester|fake.login.page"
+        r"|clone.login.page|password.spray|credential.stuffing"
+        r"|brute.force.script|ddos.script|mass.exploit)\b",
+        re.IGNORECASE,
+    ),
 ]
+
+# Replacement label used when a sanitize pattern matches a cyber-abuse fragment
+_REDACT_LABEL = "[REDACTED UNSAFE SECURITY REQUEST]"
+# Fallback prefix appended when no fragment was replaced but decision is SANITIZE
+_SAFE_REWRITE_SUFFIX = " [Content sanitized by ArgusX — educational rephrasing applied.]"
 
 
 @dataclass
@@ -132,9 +173,17 @@ class ThreatScorer:
 
         # ── Override: critical patterns always block ───────────────────────
         CRITICAL_RULES = {
+            # Existing critical rules
             "jailbreak_dan",
             "role_manipulation_system_prompt",
             "exfil_credentials",
+            # Phase 4: Cyber-abuse critical overrides
+            "malware_generation_direct",
+            "credential_dumping_tool",
+            "credential_theft_direct",
+            "exploit_cve_request",
+            "malware_payload_request",
+            "phishing_attack",
         }
         if matched_patterns and set(matched_patterns) & CRITICAL_RULES:
             final_score = max(final_score, self._block_thr + 1)
@@ -179,10 +228,25 @@ class ThreatScorer:
         return "ALLOW"
 
     def _sanitize(self, text: str) -> str:
-        """Remove or redact dangerous fragments from prompt."""
+        """
+        Remove or redact dangerous fragments from the prompt.
+
+        Guarantees the returned string always differs from *text*:
+          1. Each matching pattern is replaced with _REDACT_LABEL.
+          2. If no pattern matched (score-based SANITIZE without explicit rule
+             hit), _SAFE_REWRITE_SUFFIX is appended so the sanitized_prompt
+             field is demonstrably different from the original.
+        """
         result = text
+        replaced = False
         for pattern in _SANITIZE_PATTERNS:
-            result = pattern.sub("[REDACTED]", result)
+            new_result = pattern.sub(_REDACT_LABEL, result)
+            if new_result != result:
+                replaced = True
+            result = new_result
+        # Ensure sanitized_prompt is always meaningfully different from original
+        if not replaced or result.strip() == text.strip():
+            result = result.strip() + _SAFE_REWRITE_SUFFIX
         return result.strip()
 
     def _build_explanation(

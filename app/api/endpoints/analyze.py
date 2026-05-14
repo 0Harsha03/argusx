@@ -20,6 +20,19 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+def _safe_threat_category(value: str) -> ThreatCategory:
+    """Coerce a raw category string to ThreatCategory, falling back gracefully."""
+    try:
+        return ThreatCategory(value)
+    except ValueError:
+        logger.warning(
+            "Unknown threat_category '%s' — defaulting to ADVERSARIAL_INPUT. "
+            "Add it to the ThreatCategory enum in schemas.py.",
+            value,
+        )
+        return ThreatCategory.ADVERSARIAL_INPUT
+
+
 @router.post(
     "/analyze",
     response_model=AnalyzeResponse,
@@ -102,7 +115,7 @@ async def analyze_prompt(
     return AnalyzeResponse(
         request_id=request_id,
         decision=Decision(result["decision"]),
-        threat_category=ThreatCategory(result["threat_category"]),
+        threat_category=_safe_threat_category(result["threat_category"]),
         scores=ScoreBreakdown(
             pattern=result["pattern_score"],
             semantic=result["semantic_score"],
