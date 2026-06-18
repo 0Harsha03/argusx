@@ -79,3 +79,7 @@ docker/logs/
 *.tmp
 token.pickle
 credentials.json
+
+# ─── Evaluation Artifacts ─────────────────────────────────────────────────────
+evaluation/results/*.json
+evaluation/results/*.png

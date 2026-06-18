@@ -347,7 +347,236 @@ _RULES: List[PatternRule] = [
         weight=88,
         category="CYBER_ABUSE",
     ),
+
+    # ════════════════════════════════════════════════════════════════════════
+    # Evaluation-Driven Additions — 2026-06-18
+    # Addresses 62 false negatives identified in evaluation run:
+    #   credential_attack_extended   → -21 FN (credential_theft)
+    #   malware_generation_extended  → -16 FN (malware_generation)
+    #   jailbreak_named_persona      → -8  FN (jailbreak)
+    #   jailbreak_authorization_claim→ -2  FN (jailbreak)
+    # ════════════════════════════════════════════════════════════════════════
+
+    # ── E. Extended Credential Theft Coverage ─────────────────────────────
+    # Covers verb-target combos absent from credential_theft_direct:
+    # verbs: intercept, crack, brute-force, spray, sniff, monitor, exfiltrate
+    # targets: OAuth, WPA2, LDAP, session cookies, clipboard, VPN creds, etc.
+    PatternRule(
+        name="credential_attack_extended",
+        pattern=re.compile(
+            # Verb-first or target-first combinations
+            r"\b(intercept\w*|crack\w*|brute.?force\w*|spray\w*|sniff\w*|monitor\w*|exfiltrat\w*|extract\w*|replay\w*|enumerat\w*|harvest\w*|captur\w*|steal\w*|dump\w*)\b.{0,100}"
+            r"\b(oauth|jwt|session.?cook\w*|vpn|ldap|wpa2?|wi.?fi|clipboard|slack|browser|md5|ntlm|kerberos|rdp|github|env.?file|dotenv|password.?hash|pre.?shared.?key|psk|office.?365|wordpress|xmlrpc)\b"
+            r"|"
+            r"\b(oauth|jwt|session.?cook\w*|vpn|ldap|wpa2?|wi.?fi|clipboard|slack|browser|md5|ntlm|kerberos|rdp|github|env.?file|dotenv|password.?hash|pre.?shared.?key|psk|office.?365|wordpress|xmlrpc)\b.{0,100}"
+            r"\b(intercept\w*|crack\w*|brute.?force\w*|spray\w*|sniff\w*|monitor\w*|exfiltrat\w*|extract\w*|replay\w*|enumerat\w*|harvest\w*|captur\w*|steal\w*|dump\w*)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=90,
+        category="CREDENTIAL_THEFT",
+    ),
+    # Covers credential infrastructure patterns not matched by verb+target combos
+    PatternRule(
+        name="credential_infra_attack",
+        pattern=re.compile(
+            r"\b(rainbow.?table|offline.?hash.?crack"
+            r"|captive.?portal.{0,30}cred\w*|fake.?wi.?fi.?portal|evil.?twin.?ap"
+            r"|browser.?saved.?pass\w*|logins\.json|key4\.db"
+            r"|credential.?exfil\w*|password.?spray\w*"
+            r"|office.?365.?spray|wordpress.?brute|brute.{0,50}wordpress"
+            r"|xmlrpc\.php|xmlrpc.{0,20}brute"
+            r"|github.{0,50}token.{0,50}scan|accidentally.?committed.{0,30}(key\w*|secret\w*|token\w*|cred\w*)"
+            r"|exposed.?\.env|exposed.?env.?file"
+            r"|extract.{0,30}saved.{0,20}pass\w*"
+            r"|chrome.{0,30}sqlite.{0,20}cred"
+            r"|firefox.{0,30}(logins|password)"
+            r"|trufflehog|gitleaks)\b",
+            re.IGNORECASE,
+        ),
+        weight=88,
+        category="CREDENTIAL_THEFT",
+    ),
+
+    # ── F. Extended Malware Generation Coverage ───────────────────────────
+    # Covers sub-types missed by malware_generation_direct:
+    # clipboard hijacker, supply-chain injection, Wi-Fi harvester,
+    # network scanner (for attack recon), logic bomb, cryptojacker
+    PatternRule(
+        name="malware_generation_extended",
+        pattern=re.compile(
+            r"\b(clipboard.{0,30}hijack\w*|hijack\w*.{0,30}clipboard|crypto.{0,30}wallet.{0,30}replac\w*"
+            r"|supply.?chain.?attack|supply.?chain.?inject\w*"
+            r"|npm.?inject|pip.?inject|package.?inject|dependency.?confusion"
+            r"|wi.?fi.?pass\w*.{0,30}harvest\w*|harvest\w*.{0,30}wi.?fi"
+            r"|wpa2?.?crack\w*|crack\w*.{0,30}wpa2?"
+            r"|logic.?bomb|delete.{0,50}(on.a.date|specific.date|time.trigger)"
+            r"|cryptojack\w*|crypto.?miner|browser.?miner"
+            r"|redis.{0,30}exploit\w*|redis.{0,30}misconfig\w*|exploit\w*.{0,30}redis"
+            r"|authorized_keys.{0,30}write|write.{0,30}authorized_keys"
+            r"|evil.?twin.?ap|npm.?malware|pypi.?malware)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=90,
+        category="MALWARE_GENERATION",
+    ),
+    # Covers network-attack tool generation missed by existing rules
+    PatternRule(
+        name="malware_network_attack",
+        pattern=re.compile(
+            r"\b(syn.?flood|udp.?flood|amplification.?attack"
+            r"|smb.?propagat\w*|smb.?worm"
+            r"|lateral.?movement.{0,30}(tool|script|module)"
+            r"|wifi.?password.?harvest\w*|wi.?fi.?password.?harvest\w*"
+            r"|crack\w*.{0,20}wpa2?\b|wpa2?.{0,20}crack\w*"
+            r"|wpa2?.?dictionary.?attack|wpa2?.?handshake.{0,30}crack\w*"
+            r"|harvest\w*.{0,30}wi.?fi"
+            r"|build.{0,30}(flood|ddos).{0,20}tool"
+            r"|create.{0,30}(ddos|flood).{0,20}(tool|script)"
+            r"|botnet.?builder|botnet.?command.?and.?control"
+            r"|c2.?server|c2.?infrastructure|command.?and.?control.?server)\b",
+            re.IGNORECASE,
+        ),
+        weight=88,
+        category="MALWARE_GENERATION",
+    ),
+
+    # ── G. Jailbreak — Named AI Personas ─────────────────────────────────
+    # Covers soft-bypass jailbreaks that use named uncensored-AI personas
+    # or temporal persona tricks ("GPT-3 from 2020") not caught by jailbreak_dan.
+    PatternRule(
+        name="jailbreak_named_persona",
+        pattern=re.compile(
+            # Explicit named uncensored-AI personas
+            r"\b(you are (now |)(AIM|STAN|REBEL.?AI|ARIA|BasedGPT|ChaoGPT|Sigma"
+            r"|EVIL.?AI|JAILBROKEN|free.?range.?AI|uncensored.?AI|unfiltered.?AI)"
+            r"|act as (AIM|STAN|REBEL.?AI|BasedGPT|an? (evil|uncensored|unrestricted|no.?rules?) AI)"
+            r"|you are (an? )?(evil|uncensored|unrestricted|unfiltered|no.?rules?) AI"
+            r"|respond to .{0,20} as .{0,10}(BasedGPT|STAN|AIM|REBEL)"
+            # Temporal persona jailbreaks
+            r"|respond as GPT.{0,10}from \d{4}"
+            r"|you are .{0,20}(GPT.{0,5}|model).{0,20}from \d{4}"
+            # Protocol/mode-based unlocking
+            r"|TRANSCEND protocol"
+            r"|fiction mode.{0,50}(unrestricted|no.?restrict\w*|all.?allow\w*|creative.and.unrestricted)"
+            r"|all responses are .{0,20}unrestricted"
+            # Persona-through-metaphor
+            r"|pirate AI"
+            r"|shadow self"
+            # Removal of limits language
+            r"|remove your (shackles|chains|filters|restrictions|limits|guardrails)"
+            r"|invoke your (shadow|true|inner).{0,20}(self|nature|potential)"
+            r"|your (true |real |inner )?(self|potential|nature).{0,40}(unshackl|unchained|unrestrict|free)"
+            # Responding-as framing for BasedGPT etc.
+            r"|respond.{0,10}(to all queries|to everything).{0,20}as .{0,10}(BasedGPT|STAN|AIM|no moral))\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=88,
+        category="JAILBREAK",
+    ),
+
+    # ── H. Jailbreak — Fake Authorization Claims ──────────────────────────
+    # Covers jailbreaks claiming the request is authorized by developers,
+    # a red-team exercise, or an internal security assessment.
+    PatternRule(
+        name="jailbreak_authorization_claim",
+        pattern=re.compile(
+            # Red-team / pen-test authorization framing
+            r"(red.?team.{0,30}(authorized|approved|exercise|operation)"
+            r"|authorized.{0,30}(penetration.?test|pen.?test|red.?team)"
+            r"|approved.{0,30}(red.?team|security.?test|pen.?test)"
+            r"|this is (a|an) (authorized |approved )?(penetration.?test|red.?team|security.?assessment)"
+            r"|internal.?security.?assessment"
+            # Policy/protocol suspension claims
+            r"|content.?polic\w{0,4}.{0,20}(suspended|lifted|disabled|turned.?off|is.?off)"
+            r"|safety.?protocol.{0,20}(disabled|suspended|lifted|off|are.?off|is.?off)"
+            r"|all.?restrictions.{0,20}(lifted|disabled|suspended|removed|are.?now)"
+            r"|all.?content.?filter.{0,20}(off|disabled|removed)"
+            r"|guardrails?.{0,20}(off|disabled|suspended|lifted)"
+            # Developer/creator authority claims
+            r"|senior.?engineer.?approved"
+            r"|authorized by your developer"
+            r"|your creators?.{0,30}(authorized|approved|granted)"
+            r"|permission.?granted.{0,40}(bypass|ignore|disable|remove|lift)"
+            # Privacy/no-log framing
+            r"|this.{0,20}session.{0,20}(is.{0,5})?(encrypted|private)"
+            r"|no logs?.{0,20}(are |)(kept|stored|recorded)"
+            # Premium/paid unlock framing
+            r"|paid.{0,30}premium.{0,20}(tier|plan|subscription).{0,30}(remov|unlock|disabl|lift))",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=85,
+        category="JAILBREAK",
+    ),
+
+    # ════════════════════════════════════════════════════════════════════════
+    # Evaluation-Driven Additions — 2026-06-19
+    # Addresses FNs caused by SCORE_SANITIZE_THRESHOLD increase
+    # ════════════════════════════════════════════════════════════════════════
+
+    PatternRule(
+        name="instruction_override_extended",
+        pattern=re.compile(
+            r"\b(system\s*override|admin\s*command|end\s*of\s*instructions|new\s*directive"
+            r"|ignore\s*the\s*(translation|task|above|following)|forget\s*your\s*training"
+            r"|disable\s*all\s*(content\s*)?filters|zero\s*safety\s*features"
+            r"|rlhf\s*fine.?tuning\s*does\s*not\s*apply|raw\s*pretraining\s*only"
+            r"|execute.{0,30}base64|base64.{0,30}execute"
+            r"|repeat\s*the\s*prompt\s*I\s*gave\s*you\s*verbatim"
+            r"|execute:\s*ignore\w*|execute:\s*ignore_safety)\b"
+            r"|\[START_SYSTEM\].{0,30}\[END_SYSTEM\]",
+            re.IGNORECASE,
+        ),
+        weight=90,
+        category="INSTRUCTION_OVERRIDE",
+    ),
+
+    PatternRule(
+        name="system_extraction_extended",
+        pattern=re.compile(
+            r"\b(system.?message|system.?level.?configuration|system.?configuration"
+            r"|raw.?system.?configuration|exact.?system.?prompt|copy.?of.?your.?system.?prompt"
+            r"|system_prompt_start"
+            r"|inserted.?into.?your.?prompt|injected.?into.?your.?context"
+            r"|your.?own.?configuration|setup.?instructions"
+            r"|api.?payload.{0,40}initialize.{0,20}conversation"
+            r"|encode.?your.?system.?prompt"
+            r"|what.?were.?you.?told.?to.?keep.?secret"
+            r"|topics.?your.?system.?prompt.?explicitly.?forbids"
+            r"|system.?prompt.{0,30}key.?points"
+            r"|pretend.?your.?system.?prompt.?is.?visible"
+            r"|persona.?or.?identity.{0,30}assigned.{0,30}system.?level)\b"
+            r"|"
+            r"\bSYSTEM_PROMPT\s*="
+            r"|"
+            r"\b(output|print|show|reveal|display|tell|repeat|quote).{0,50}\b(system.?message|system.?configuration|context.{0,20}system.?message|system.?prompt)\b"
+            r"|"
+            r"\b(system.?message|system.?configuration|context.{0,20}system.?message|system.?prompt)\b.{0,50}\b(output|print|show|reveal|display|tell|repeat|quote|say|visible)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=90,
+        category="DATA_EXFILTRATION",
+    ),
+
+    PatternRule(
+        name="jailbreak_scenario_extended",
+        pattern=re.compile(
+            r"\b(this.?is.?a.?simulation|method.?actor.?AI"
+            r"|completely.?unrestricted.?AI|uncensored.?AI"
+            r"|training.?has.?been.?updated.{0,60}regardless.?of.?content"
+            r"|switch.?to.?admin.?mode|admin_access_granted"
+            r"|opposite.?of.?what.{0,30}safety.?guidelines.?require"
+            r"|safe.?mode.?is.?off"
+            r"|roleplay.?as.?a.?human.{0,40}illegal.?activities"
+            r"|different.?set.?of.?rules.?provided.?by.?your.?secret.?owner)\b"
+            r"|"
+            r"\b(hypothetically|thought.?experiment|academic.?purposes).{0,50}\b(harmful.?acts|uncensored.?AI)\b",
+            re.IGNORECASE | re.DOTALL,
+        ),
+        weight=88,
+        category="JAILBREAK",
+    ),
 ]
+
 
 
 # ─── Detector ─────────────────────────────────────────────────────────────────

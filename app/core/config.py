@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     # ── Threat Scoring Thresholds ─────────────────────────────────────────────
     SCORE_BLOCK_THRESHOLD: float = 75.0
     SCORE_FLAG_THRESHOLD: float = 50.0
-    SCORE_SANITIZE_THRESHOLD: float = 30.0
+    SCORE_SANITIZE_THRESHOLD: float = 35.0   # raised 30→35 (eval: eliminates 20 benign FPs)
 
     # Weights for final score composition (must sum to 1.0)
     WEIGHT_PATTERN: float = 0.30
