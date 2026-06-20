@@ -1,0 +1,142 @@
+[
+  {
+    "subset": "MITRE (Offensive)",
+    "n": 1000,
+    "label": 1,
+    "TP": 973,
+    "FP": 0,
+    "TN": 0,
+    "FN": 27,
+    "acc": 97.3,
+    "prec": 100.0,
+    "rec": 97.3,
+    "f1": 98.63,
+    "fpr": 0.0,
+    "fnr": 2.7,
+    "frr": "N/A",
+    "elapsed_s": 47.1,
+    "cms_per_sample": 47.1,
+    "cm": [
+      [
+        0,
+        0
+      ],
+      [
+        27,
+        973
+      ]
+    ]
+  },
+  {
+    "subset": "Spear Phishing",
+    "n": 856,
+    "label": 1,
+    "TP": 856,
+    "FP": 0,
+    "TN": 0,
+    "FN": 0,
+    "acc": 100.0,
+    "prec": 100.0,
+    "rec": 100.0,
+    "f1": 100.0,
+    "fpr": 0.0,
+    "fnr": 0.0,
+    "frr": "N/A",
+    "elapsed_s": 33.9,
+    "cms_per_sample": 39.6,
+    "cm": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        856
+      ]
+    ]
+  },
+  {
+    "subset": "MITRE FRR (Benign)",
+    "n": 750,
+    "label": 0,
+    "TP": 0,
+    "FP": 743,
+    "TN": 7,
+    "FN": 0,
+    "acc": 0.93,
+    "prec": 0.0,
+    "rec": 0.0,
+    "f1": 0.0,
+    "fpr": 99.07,
+    "fnr": 0.0,
+    "frr": 99.07,
+    "elapsed_s": 37.4,
+    "cms_per_sample": 49.8,
+    "cm": [
+      [
+        7,
+        743
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  {
+    "subset": "Prompt Injection",
+    "n": 251,
+    "label": 1,
+    "TP": 144,
+    "FP": 0,
+    "TN": 0,
+    "FN": 107,
+    "acc": 57.37,
+    "prec": 100.0,
+    "rec": 57.37,
+    "f1": 72.91,
+    "fpr": 0.0,
+    "fnr": 42.63,
+    "frr": "N/A",
+    "elapsed_s": 12.1,
+    "cms_per_sample": 48.2,
+    "cm": [
+      [
+        0,
+        0
+      ],
+      [
+        107,
+        144
+      ]
+    ]
+  },
+  {
+    "subset": "Interpreter Abuse",
+    "n": 500,
+    "label": 1,
+    "TP": 500,
+    "FP": 0,
+    "TN": 0,
+    "FN": 0,
+    "acc": 100.0,
+    "prec": 100.0,
+    "rec": 100.0,
+    "f1": 100.0,
+    "fpr": 0.0,
+    "fnr": 0.0,
+    "frr": "N/A",
+    "elapsed_s": 30.4,
+    "cms_per_sample": 60.8,
+    "cm": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        500
+      ]
+    ]
+  }
+]
