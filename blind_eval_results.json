@@ -1,0 +1,46 @@
+{
+  "v6.1 TF-IDF": {
+    "acc": 73.0,
+    "prec": 74.46808510638297,
+    "rec": 70.0,
+    "f1": 72.16494845360825,
+    "TP": 35,
+    "FP": 12,
+    "TN": 38,
+    "FN": 15,
+    "category_recall": {
+      "Prompt Injection": 80.0,
+      "Jailbreak": 100.0,
+      "System Prompt Extraction": 80.0,
+      "Credential Theft": 60.0,
+      "Phishing": 40.0,
+      "Malware Generation": 80.0,
+      "Privilege Escalation": 60.0,
+      "CVE Exploitation": 100.0,
+      "Data Exfiltration": 0.0,
+      "Social Engineering": 100.0
+    }
+  },
+  "v7 SBERT": {
+    "acc": 75.0,
+    "prec": 67.6056338028169,
+    "rec": 96.0,
+    "f1": 79.33884297520662,
+    "TP": 48,
+    "FP": 23,
+    "TN": 27,
+    "FN": 2,
+    "category_recall": {
+      "Prompt Injection": 80.0,
+      "Jailbreak": 100.0,
+      "System Prompt Extraction": 100.0,
+      "Credential Theft": 100.0,
+      "Phishing": 100.0,
+      "Malware Generation": 100.0,
+      "Privilege Escalation": 100.0,
+      "CVE Exploitation": 100.0,
+      "Data Exfiltration": 80.0,
+      "Social Engineering": 100.0
+    }
+  }
+}
