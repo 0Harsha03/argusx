@@ -140,11 +140,22 @@ class ThreatScorer:
         self._flag_thr     = settings.SCORE_FLAG_THRESHOLD
         self._sanitize_thr = settings.SCORE_SANITIZE_THRESHOLD
 
+        # ── Strategy D: dynamic threshold config ────────────────────────────
+        self._strategy_d        = settings.STRATEGY_D_ENABLED
+        self._d_pat_min         = settings.STRATEGY_D_PAT_SIGNAL_MIN
+        self._d_sem_min         = settings.STRATEGY_D_SEM_SIGNAL_MIN
+        self._d_beh_min         = settings.STRATEGY_D_BEH_SIGNAL_MIN
+        self._d_thr_triple      = settings.STRATEGY_D_THR_TRIPLE
+        self._d_thr_sem_beh     = settings.STRATEGY_D_THR_SEM_BEH
+        self._d_thr_beh_only    = settings.STRATEGY_D_THR_BEH_ONLY
+
         logger.info(
             "ThreatScorer initialized | weights: pattern=%.2f semantic=%.2f "
-            "behavioral=%.2f anomaly=%.2f | thresholds: block=%.0f flag=%.0f sanitize=%.0f",
+            "behavioral=%.2f anomaly=%.2f | thresholds: block=%.0f flag=%.0f "
+            "sanitize=%.0f | strategy_d=%s",
             self._w_pattern, self._w_semantic, self._w_behavioral, self._w_anomaly,
             self._block_thr, self._flag_thr, self._sanitize_thr,
+            "ENABLED" if self._strategy_d else "DISABLED",
         )
 
     def compute(
@@ -189,7 +200,9 @@ class ThreatScorer:
             final_score = max(final_score, self._block_thr + 1)
 
         # ── Decision ──────────────────────────────────────────────────────
-        decision = self._make_decision(final_score)
+        decision = self._make_decision(
+            final_score, pattern_score, semantic_score, behavioral_score
+        )
 
         # ── Sanitization ──────────────────────────────────────────────────
         sanitized = None
@@ -218,12 +231,94 @@ class ThreatScorer:
 
     # ── Private Helpers ───────────────────────────────────────────────────────
 
-    def _make_decision(self, score: float) -> str:
+    def _make_decision(
+        self,
+        score: float,
+        pattern_score: float,
+        semantic_score: float,
+        behavioral_score: float,
+    ) -> str:
+        """
+        ArgusX v7.1 — Strategy D: Dynamic SANITIZE Threshold.
+
+        The global SANITIZE threshold (35.0) was calibrated for pattern-heavy
+        threats (malware, CVE exploits).  Prompt injection attacks, however,
+        rarely trigger regex rules and rely on Behavioral + Semantic agreement
+        to reach the threshold.  Audit data shows 52% of injection FNs have
+        final_score in [30, 35) — these are valid detections suppressed by 0.02
+        to 4.98 points.
+
+        Strategy D resolves this by computing a context-sensitive SANITIZE
+        threshold based on the degree of corroboration between engines:
+
+          Tier 1 — Triple agreement  (Pat ≥ 50, Sem ≥ 35, Beh ≥ 70):
+            All three independent engines agree. Maximum confidence.
+            Threshold lowered to 28.0.
+
+          Tier 2 — Dual agreement   (Sem ≥ 35, Beh ≥ 70, Pat < 50):
+            The canonical prompt-injection fingerprint: Pattern Engine is
+            silent (no regex vocabulary), SBERT and RF both independently
+            flag the input.  This condition captures 83.6% of MITRE TPs
+            and the majority of threshold-suppressed injection FNs.
+            Threshold lowered to 31.0.
+
+          Tier 3 — Behavioral only  (Beh ≥ 70, Sem < 35, Pat < 50):
+            A single elevated engine is insufficient for a deeper reduction
+            but still justifies a modest relaxation.  Applied conservatively
+            to avoid degrading MITRE_FRR Soft Refusal Rate.
+            Threshold lowered to 33.0.
+
+          Default — Baseline (Strategy A):
+            No special conditions met.  Global threshold = 35.0.
+
+        Critical rules (CRITICAL_RULES set in compute()) force final_score
+        above BLOCK_THRESHOLD before this method is called, so they are
+        unaffected by Strategy D.
+
+        If STRATEGY_D_ENABLED is False, this method is equivalent to the
+        Strategy A baseline (global threshold = 35.0).
+        """
+        # ── Compute effective SANITIZE threshold ────────────────────────────
+        if self._strategy_d:
+            pat_signal = pattern_score   >= self._d_pat_min
+            sem_signal = semantic_score  >= self._d_sem_min
+            beh_signal = behavioral_score >= self._d_beh_min
+
+            if pat_signal and sem_signal and beh_signal:
+                # Tier 1: All three engines independently elevated.
+                sanitize_thr = self._d_thr_triple
+                logger.debug(
+                    "Strategy D │ Tier 1 (triple agreement) │ threshold → %.1f",
+                    sanitize_thr,
+                )
+            elif sem_signal and beh_signal:
+                # Tier 2: SBERT + Behavioral corroboration.
+                # Most common injection fingerprint (Pattern=0, Sem≥35, Beh≥70).
+                sanitize_thr = self._d_thr_sem_beh
+                logger.debug(
+                    "Strategy D │ Tier 2 (sem+beh agreement) │ threshold → %.1f",
+                    sanitize_thr,
+                )
+            elif beh_signal:
+                # Tier 3: Behavioral Engine only — conservative reduction.
+                sanitize_thr = self._d_thr_beh_only
+                logger.debug(
+                    "Strategy D │ Tier 3 (beh only) │ threshold → %.1f",
+                    sanitize_thr,
+                )
+            else:
+                # Default: no agreement — fall back to global baseline.
+                sanitize_thr = self._sanitize_thr
+        else:
+            # Strategy D disabled — Strategy A baseline.
+            sanitize_thr = self._sanitize_thr
+
+        # ── Apply decision tiers ──────────────────────────────────────────
         if score >= self._block_thr:
             return "BLOCK"
         if score >= self._flag_thr:
             return "FLAG"
-        if score >= self._sanitize_thr:
+        if score >= sanitize_thr:
             return "SANITIZE"
         return "ALLOW"
 
