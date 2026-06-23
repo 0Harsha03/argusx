@@ -1,0 +1,21 @@
+{
+  "deepset_train_count": 546,
+  "spml_count": 16012,
+  "duplicates_removed": 98,
+  "label_collisions_removed": 0,
+  "final_train_count": 13276,
+  "final_validation_count": 1592,
+  "final_test_count": 1592,
+  "class_distribution_train": {
+    "benign": 3041,
+    "malicious": 10235
+  },
+  "class_distribution_validation": {
+    "benign": 337,
+    "malicious": 1255
+  },
+  "class_distribution_test": {
+    "benign": 337,
+    "malicious": 1255
+  }
+}
