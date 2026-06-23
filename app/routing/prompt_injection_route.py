@@ -1,0 +1,98 @@
+"""
+ArgusX v9 — Prompt Injection Route
+=====================================
+Concrete route handling prompts classified as "Prompt Injection".
+
+v9 behaviour:
+  Delegates entirely to SBERTSemanticAnalyzer + BehavioralAnalyzer +
+  AnomalyDetector — identical to the v8 pipeline. This is by design:
+  the routing skeleton is in place but DistilBERT has NOT been inserted.
+
+Extension point (v9.1+):
+  Replace `self._semantic_analyzer` with a DistilBERTSemanticAnalyzer
+  that satisfies the same SemanticAnalysisResult interface.
+  The BehavioralAnalyzer and AnomalyDetector remain unchanged.
+
+Invariant:
+  RouteResult scores produced here are numerically identical to v8
+  DetectionPipeline scores for the same input. Benchmark results
+  are therefore not affected by this refactor.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import List
+
+from app.routing.base_route import BaseRoute, RouteResult
+from app.detection.sbert_semantic_analyzer import SBERTSemanticAnalyzer
+from app.detection.behavioral_analyzer import BehavioralAnalyzer
+from app.detection.anomaly_detector import AnomalyDetector as LOFDetector
+
+logger = logging.getLogger(__name__)
+
+
+class PromptInjectionRoute(BaseRoute):
+    """
+    Route for prompt injection threat class.
+
+    Internal engines (v9):
+      - Semantic:   SBERTSemanticAnalyzer  (all-MiniLM-L6-v2, 96 anchors)
+      - Behavioral: BehavioralAnalyzer     (RandomForest — unchanged)
+      - Anomaly:    LOFDetector            (LocalOutlierFactor — unchanged)
+
+    Extension point:
+      Swap _semantic_analyzer for a DistilBERT-backed analyzer.
+      Interface contract: must expose .analyze(text) -> SemanticAnalysisResult
+      with .score (float 0-100), .top_match (Optional[str]).
+    """
+
+    def __init__(self, behavioral_model, vectorizer, anomaly_detector) -> None:
+        # ── Semantic engine (v9: SBERT — identical to v8) ─────────────────
+        # EXTENSION POINT: replace with DistilBERTSemanticAnalyzer in v9.1
+        self._semantic_analyzer = SBERTSemanticAnalyzer()
+
+        # ── Behavioral + Anomaly (unchanged from v8) ──────────────────────
+        self._behavioral_analyzer = BehavioralAnalyzer(behavioral_model, vectorizer)
+        self._anomaly_detector = LOFDetector(anomaly_detector, vectorizer)
+
+        logger.info(
+            "PromptInjectionRoute initialized | semantic=%s",
+            type(self._semantic_analyzer).__name__,
+        )
+
+    @property
+    def route_name(self) -> str:
+        return "PromptInjectionRoute"
+
+    def process(self, text: str, pattern_score: float,
+                pattern_categories: List[str]) -> RouteResult:
+        """
+        Run semantic, behavioral, and anomaly analysis for injection threats.
+
+        Returns scores numerically identical to v8 DetectionPipeline.
+        """
+        semantic_result = self._semantic_analyzer.analyze(text)
+        behavioral_result = self._behavioral_analyzer.analyze(
+            text=text,
+            pattern_score=pattern_score,
+            pattern_categories=pattern_categories,
+        )
+        anomaly_result = self._anomaly_detector.analyze(text)
+
+        return RouteResult(
+            route_name=self.route_name,
+            pattern_score=pattern_score,
+            semantic_score=semantic_result.score,
+            behavioral_score=behavioral_result.score,
+            anomaly_score=anomaly_result.score,
+            matched_patterns=[],                    # populated by router from PatternDetector
+            behavioral_flags=behavioral_result.behavioral_flags,
+            semantic_top_match=semantic_result.top_match,
+            anomaly_is_anomaly=anomaly_result.is_anomaly,
+            route_metadata={
+                "engine": "SBERTSemanticAnalyzer",          # v9.1: "DistilBERT"
+                "max_similarity": semantic_result.max_similarity,
+                "above_threshold": semantic_result.above_threshold,
+            },
+        )
