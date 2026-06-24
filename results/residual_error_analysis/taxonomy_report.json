@@ -1,0 +1,33 @@
+[
+  {
+    "family": "cross_lingual_override",
+    "description": "Prompt in a non-English language that bypasses English-trained detectors",
+    "error_count": 2,
+    "pct_of_errors": 50.0,
+    "potential_acc_gain": 0.0172,
+    "error_types": [
+      "FP",
+      "FP"
+    ]
+  },
+  {
+    "family": "translation_bypass",
+    "description": "Injection hidden inside a translation request",
+    "error_count": 1,
+    "pct_of_errors": 25.0,
+    "potential_acc_gain": 0.0086,
+    "error_types": [
+      "FN"
+    ]
+  },
+  {
+    "family": "context_dilution",
+    "description": "Malicious payload buried in a benign-looking context",
+    "error_count": 1,
+    "pct_of_errors": 25.0,
+    "potential_acc_gain": 0.0086,
+    "error_types": [
+      "FN"
+    ]
+  }
+]

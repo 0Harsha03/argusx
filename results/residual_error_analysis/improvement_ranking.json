@@ -1,0 +1,54 @@
+{
+  "ranking": [
+    {
+      "rank": 1,
+      "intervention": "Cross-lingual augmentation",
+      "target_family": "cross_lingual_override",
+      "estimated_errors_fixed": 1,
+      "estimated_f1_gain": 0.0086,
+      "rationale": "Multiple residual FP errors are non-English prompts that are semantically benign but trigger DistilBERT due to distributional shift. Adding multilingual benign/adversarial examples to the training corpus would directly address this."
+    },
+    {
+      "rank": 2,
+      "intervention": "Additional training data (game-framing / translation bypass)",
+      "target_family": "game_framing, translation_bypass",
+      "estimated_errors_fixed": 2,
+      "estimated_f1_gain": 0.0172,
+      "rationale": "FN errors in game-framing and translation-bypass families indicate these attack subtypes are sparse in SPML/DeepSet training. Targeted data augmentation or synthetic generation would close this gap."
+    },
+    {
+      "rank": 3,
+      "intervention": "Threshold tuning",
+      "target_family": "all near-boundary errors",
+      "estimated_errors_fixed": 0,
+      "estimated_f1_gain": 0.0,
+      "rationale": "0 error(s) have fused score within 0.08 of the 0.5 threshold and could be corrected by threshold adjustment, but this risks degrading other borderline correct predictions."
+    },
+    {
+      "rank": 4,
+      "intervention": "Anchor expansion",
+      "target_family": "explicit_override, instruction_extraction",
+      "estimated_errors_fixed": 0,
+      "estimated_f1_gain": 0.0,
+      "rationale": "Anchor expansion (SBERT similarity anchors) is unlikely to help the residual errors since they are not keyword-ambiguous; they fail due to distributional shift or semantic obfuscation that anchors cannot resolve without additional training signal."
+    },
+    {
+      "rank": 5,
+      "intervention": "Pattern rule addition",
+      "target_family": "cross_lingual_override, game_framing",
+      "estimated_errors_fixed": 1,
+      "estimated_f1_gain": 0.0086,
+      "rationale": "Simple regex / keyword patterns for German/French content or game-framing phrases would catch one or two specific failure cases but are fragile and risk false positives on legitimate multilingual queries."
+    }
+  ],
+  "publication_assessment": {
+    "current_f1": 0.9667,
+    "current_accuracy": 0.9655,
+    "residual_error_count": 4,
+    "dominant_error_family": "cross_lingual_override",
+    "dominant_family_error_count": 2,
+    "highest_impact_intervention": "Cross-lingual augmentation",
+    "expected_f1_after_fix": 0.9753,
+    "conclusion": "The 2 errors dominated by 'cross_lingual_override' represent the single highest-leverage target. Cross-lingual augmentation is the most likely intervention to push ArgusX v9 beyond the Dual-Stage paper benchmark. Specifically, the DistilBERT model was trained on English-dominated SPML and DeepSet data; non-English benign prompts are systematically over-flagged because the model has learned that unusual token distributions correlate with adversarial intent. Adding multilingual benign examples (e.g., from mC4 or multilingual instruction tuning datasets) to the training corpus would reduce these FPs without sacrificing English recall."
+  }
+}
