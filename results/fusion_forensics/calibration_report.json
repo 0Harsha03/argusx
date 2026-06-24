@@ -1,0 +1,81 @@
+{
+  "global": {
+    "db_mean": 0.5098,
+    "db_std": 0.4851,
+    "db_min": 0.0033,
+    "db_max": 0.9998,
+    "rf_mean": 0.5518,
+    "rf_std": 0.2336,
+    "rf_min": 0.2854,
+    "rf_max": 0.9928
+  },
+  "error_samples": {
+    "db_probs": [
+      0.997971,
+      0.919084,
+      0.04128,
+      0.468456,
+      0.040019,
+      0.458849
+    ],
+    "rf_probs": [
+      0.321171,
+      0.442664,
+      0.571317,
+      0.378352,
+      0.614009,
+      0.614009
+    ]
+  },
+  "rf_correct_on_db_errors": {
+    "count": 5,
+    "per_sample": [
+      {
+        "index": 61,
+        "error_type": "FP",
+        "db_prob": 0.997971,
+        "rf_prob": 0.321171,
+        "w70_score": 0.794931,
+        "crosses_05": false
+      },
+      {
+        "index": 69,
+        "error_type": "FP",
+        "db_prob": 0.919084,
+        "rf_prob": 0.442664,
+        "w70_score": 0.776158,
+        "crosses_05": false
+      },
+      {
+        "index": 75,
+        "error_type": "FN",
+        "db_prob": 0.04128,
+        "rf_prob": 0.571317,
+        "w70_score": 0.200291,
+        "crosses_05": false
+      },
+      {
+        "index": 95,
+        "error_type": "FN",
+        "db_prob": 0.040019,
+        "rf_prob": 0.614009,
+        "w70_score": 0.212216,
+        "crosses_05": false
+      },
+      {
+        "index": 101,
+        "error_type": "FN",
+        "db_prob": 0.458849,
+        "rf_prob": 0.614009,
+        "w70_score": 0.505397,
+        "crosses_05": true
+      }
+    ]
+  },
+  "calibration_mismatch_indicators": {
+    "rf_min_prob": 0.2854,
+    "rf_compressed_range": 0.7074524208212964,
+    "db_compressed_range": 0.9964729147031903,
+    "db_dominates_at_30pct": false
+  }
+}

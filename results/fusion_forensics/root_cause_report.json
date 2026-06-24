@@ -1,0 +1,53 @@
+{
+  "conclusion": "B. Probability calibration issue",
+  "explanation": "DistilBERT is extremely overconfident on its mistakes (3 of 6 error samples have DB prob < 0.05 or > 0.95). At 30% RF weight, the maximum RF contribution is only +0.298, which is mathematically insufficient to push the fused score past the 0.5 decision boundary when DB is near 0 or near 1. The audit finding (RF correct on 5/6) was accurate -- but 'correct' at binary predict_proba threshold does not imply the RF probability is strong enough to overcome an overconfident DB signal in weighted fusion. This is a calibration mismatch, not a weighting issue.",
+  "evidence": {
+    "rf_correct_on_db_errors": 5,
+    "fn_db_probs_low_examples": [
+      0.04128,
+      0.468456,
+      0.040019,
+      0.458849
+    ],
+    "fn_rf_probs": [
+      0.571317,
+      0.378352,
+      0.614009,
+      0.614009
+    ],
+    "fn_w70_fusion_scores": [
+      0.2003,
+      0.4414,
+      0.2122,
+      0.5054
+    ],
+    "fn_still_wrong_at_w70": 2,
+    "fp_db_probs_high_examples": [
+      0.997971,
+      0.919084
+    ],
+    "fp_still_wrong_at_w70": 2,
+    "rf_min_possible_contribution_at_30pct": 0.2979,
+    "db_extreme_confidence_cases": [
+      0.997971,
+      0.04128,
+      0.040019
+    ]
+  },
+  "audit_vs_fusion_discrepancy": {
+    "audit_rf_correct_on_db_errors": 5,
+    "fusion_errors_recovered": 1,
+    "unrecovered_despite_rf_correct": 4,
+    "reason": "RF binary prediction being correct does not guarantee the RF probability is large enough to shift the weighted fused score across the 0.5 threshold when DistilBERT probability is near 0 or 1."
+  },
+  "recommendation": {
+    "recommended_next_step": "2. Probability calibration",
+    "rationale": "Apply Platt scaling or isotonic regression to calibrate both DistilBERT and RF probabilities to a common, well-calibrated scale before fusion. This will prevent DB's overconfidence from dominating the weighted average and allow RF corrections to propagate through the decision boundary. After calibration, re-evaluate the w70/w30 strategy. Meta-classifier stacking is the alternative if calibration proves insufficient.",
+    "alternatives_considered": [
+      "1. Retune fusion weights -- insufficient: even at w50/w50, RF cannot overcome DB probs near 0 or 1",
+      "3. Meta-classifier stacking -- valid but more complex; try calibration first",
+      "4. Alternative fusion method -- log-odds averaging would help but calibration is the root fix",
+      "5. No further fusion work -- not recommended given evidence of complementarity"
+    ]
+  }
+}
