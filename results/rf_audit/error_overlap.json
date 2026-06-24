@@ -1,0 +1,12 @@
+{
+  "rf_false_positives": 19,
+  "rf_false_negatives": 25,
+  "distilbert_false_positives": 2,
+  "distilbert_false_negatives": 4,
+  "distilbert_mistakes_total": 6,
+  "distilbert_mistakes_caught_by_rf": 5,
+  "caught_details": {
+    "fp_fixed_by_rf": 2,
+    "fn_fixed_by_rf": 3
+  }
+}
