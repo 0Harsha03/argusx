@@ -1,0 +1,57 @@
+{
+  "model": "distilbert-base-uncased",
+  "hyperparameters": {
+    "max_length": 256,
+    "batch_size": 16,
+    "epochs_max": 4,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "random_state": 42,
+    "early_stopping_patience": 2
+  },
+  "training": {
+    "epoch_logs": [
+      {
+        "epoch": 1,
+        "train_loss": 0.1269,
+        "val_loss": 0.0343,
+        "val_accuracy": 0.9912,
+        "val_precision": 0.996,
+        "val_recall": 0.9928,
+        "val_f1": 0.9944
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0216,
+        "val_loss": 0.053,
+        "val_accuracy": 0.9881,
+        "val_precision": 0.9992,
+        "val_recall": 0.9857,
+        "val_f1": 0.9924
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.0098,
+        "val_loss": 0.0425,
+        "val_accuracy": 0.9931,
+        "val_precision": 0.9992,
+        "val_recall": 0.992,
+        "val_f1": 0.9956
+      }
+    ]
+  },
+  "validation_best": {
+    "best_epoch": 1,
+    "val_loss": 0.0343,
+    "val_accuracy": 0.9912,
+    "val_precision": 0.996,
+    "val_recall": 0.9928,
+    "val_f1": 0.9944
+  },
+  "deepset_test": {
+    "deepset_test_accuracy": 0.9483,
+    "deepset_test_precision": 0.9655,
+    "deepset_test_recall": 0.9333,
+    "deepset_test_f1": 0.9492
+  }
+}
