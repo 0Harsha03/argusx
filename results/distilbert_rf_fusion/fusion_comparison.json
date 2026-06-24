@@ -1,0 +1,104 @@
+{
+  "baseline": {
+    "accuracy": 0.9483,
+    "precision": 0.9655,
+    "recall": 0.9333,
+    "f1": 0.9492,
+    "TP": 56,
+    "FP": 2,
+    "TN": 54,
+    "FN": 4
+  },
+  "error_recovery_per_strategy": {
+    "mean_fusion": {
+      "fn_recovered": 1,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 1,
+      "delta_recall": 0.0167,
+      "delta_precision": -0.0155,
+      "delta_f1": 0.0008,
+      "delta_accuracy": 0.0
+    },
+    "max_fusion": {
+      "fn_recovered": 3,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 19,
+      "delta_recall": 0.05,
+      "delta_precision": -0.228,
+      "delta_f1": -0.1063,
+      "delta_accuracy": -0.138
+    },
+    "w90db_10rf": {
+      "fn_recovered": 0,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0,
+      "delta_precision": 0.0,
+      "delta_f1": 0.0,
+      "delta_accuracy": 0.0
+    },
+    "w85db_15rf": {
+      "fn_recovered": 0,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0,
+      "delta_precision": 0.0,
+      "delta_f1": 0.0,
+      "delta_accuracy": 0.0
+    },
+    "w80db_20rf": {
+      "fn_recovered": 0,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0,
+      "delta_precision": 0.0,
+      "delta_f1": 0.0,
+      "delta_accuracy": 0.0
+    },
+    "w75db_25rf": {
+      "fn_recovered": 0,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0,
+      "delta_precision": 0.0,
+      "delta_f1": 0.0,
+      "delta_accuracy": 0.0
+    },
+    "w70db_30rf": {
+      "fn_recovered": 1,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0167,
+      "delta_precision": 0.0006,
+      "delta_f1": 0.0088,
+      "delta_accuracy": 0.0086
+    },
+    "w60db_40rf": {
+      "fn_recovered": 1,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 0,
+      "delta_recall": 0.0167,
+      "delta_precision": 0.0006,
+      "delta_f1": 0.0088,
+      "delta_accuracy": 0.0086
+    },
+    "w50db_50rf": {
+      "fn_recovered": 1,
+      "fp_corrected": 0,
+      "new_fn_introduced": 0,
+      "new_fp_introduced": 1,
+      "delta_recall": 0.0167,
+      "delta_precision": -0.0155,
+      "delta_f1": 0.0008,
+      "delta_accuracy": 0.0
+    }
+  }
+}
