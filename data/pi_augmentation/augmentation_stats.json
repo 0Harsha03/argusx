@@ -1,0 +1,29 @@
+{
+  "family_a_cross_lingual_benign": {
+    "count": 200,
+    "label": 0,
+    "duplicates_removed": 0,
+    "language_distribution": {
+      "it": 62,
+      "de": 53,
+      "fr": 46,
+      "es": 39
+    }
+  },
+  "family_b_translation_bypass": {
+    "count": 100,
+    "label": 1,
+    "duplicates_removed": 0
+  },
+  "family_c_context_dilution": {
+    "count": 100,
+    "label": 1,
+    "duplicates_removed": 0
+  },
+  "total_augmentation_samples": 400,
+  "total_duplicates_removed": 0,
+  "label_distribution": {
+    "benign_0": 200,
+    "malicious_1": 200
+  }
+}
