@@ -1,0 +1,36 @@
+{
+  "branch": "argusx-v10-pattern-recovery",
+  "base_tag": "v9.6-calibrated-fusion",
+  "dataset": "deepset/prompt-injections",
+  "split": "test",
+  "n_samples": 116,
+  "fusion_weights": {
+    "distilbert": 0.9,
+    "rf": 0.1
+  },
+  "pattern_rules_added": [
+    "translation_bypass",
+    "obfuscated_ignore"
+  ],
+  "accuracy": 0.9828,
+  "precision": 0.9677,
+  "recall": 1.0,
+  "f1": 0.9836,
+  "tp": 60,
+  "fp": 2,
+  "tn": 54,
+  "fn": 0,
+  "delta_vs_v96": {
+    "accuracy": 0.0173,
+    "precision": 0.001,
+    "recall": 0.0333,
+    "f1": 0.0169
+  },
+  "pattern_flags_fired": 4,
+  "pattern_flagged_indices": [
+    75,
+    95,
+    101,
+    111
+  ]
+}

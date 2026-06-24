@@ -1,0 +1,12 @@
+ArgusX v10 Pattern Recovery — DeepSet Benchmark
+Branch: argusx-v10-pattern-recovery
+Base:   v9.6-calibrated-fusion
+
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.96      0.98        56
+   Malicious       0.97      1.00      0.98        60
+
+    accuracy                           0.98       116
+   macro avg       0.98      0.98      0.98       116
+weighted avg       0.98      0.98      0.98       116
