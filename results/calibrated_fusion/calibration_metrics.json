@@ -1,0 +1,30 @@
+{
+  "distilbert": {
+    "uncalibrated": {
+      "brier": 0.00746,
+      "ece": 0.210417
+    },
+    "platt": {
+      "brier": 0.008188,
+      "ece": 0.203372
+    },
+    "isotonic": {
+      "brier": 0.00547,
+      "ece": 0.204774
+    }
+  },
+  "rf": {
+    "uncalibrated": {
+      "brier": 0.1285,
+      "ece": 0.111337
+    },
+    "platt": {
+      "brier": 0.091551,
+      "ece": 0.125434
+    },
+    "isotonic": {
+      "brier": 0.080892,
+      "ece": 0.101759
+    }
+  }
+}

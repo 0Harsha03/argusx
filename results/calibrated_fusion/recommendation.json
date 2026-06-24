@@ -1,0 +1,10 @@
+{
+  "calibration_improves_fusion": true,
+  "recommendation": "Adopt calibrated fusion for ArgusX v9.",
+  "best_method": "Best Platt-Cal Fusion (w90db_10rf)",
+  "best_f1": 0.9667,
+  "best_recall": 0.9667,
+  "errors_recovered_platt": 0,
+  "errors_recovered_isotonic": 0,
+  "rationale": "Calibration raised F1 from 0.9580 to 0.9667. Isotonic regression recovered 0/6 known errors vs 0/6 for Platt. Recommend the best-performing calibration scheme before deployment."
+}

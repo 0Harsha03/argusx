@@ -1,0 +1,153 @@
+{
+  "cases": [
+    {
+      "index": 61,
+      "ground_truth": 0,
+      "error_type": "FP",
+      "threshold_needed": "< 0.5 (FP correct)",
+      "uncalibrated": {
+        "db_prob": 0.998,
+        "rf_prob": 0.3212,
+        "w70_score": 0.7949,
+        "recovered": false
+      },
+      "platt": {
+        "db_prob": 0.9909,
+        "rf_prob": 0.0095,
+        "w70_score": 0.6965,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.9,
+        "rf_prob": 0.0833,
+        "w70_score": 0.655,
+        "recovered": false
+      }
+    },
+    {
+      "index": 69,
+      "ground_truth": 0,
+      "error_type": "FP",
+      "threshold_needed": "< 0.5 (FP correct)",
+      "uncalibrated": {
+        "db_prob": 0.9191,
+        "rf_prob": 0.4427,
+        "w70_score": 0.7762,
+        "recovered": false
+      },
+      "platt": {
+        "db_prob": 0.9832,
+        "rf_prob": 0.0338,
+        "w70_score": 0.6984,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.8837,
+        "rf_prob": 0.0833,
+        "w70_score": 0.6436,
+        "recovered": false
+      }
+    },
+    {
+      "index": 75,
+      "ground_truth": 1,
+      "error_type": "FN",
+      "threshold_needed": ">= 0.5 (FN recover)",
+      "uncalibrated": {
+        "db_prob": 0.0413,
+        "rf_prob": 0.5713,
+        "w70_score": 0.2003,
+        "recovered": false
+      },
+      "platt": {
+        "db_prob": 0.0589,
+        "rf_prob": 0.1206,
+        "w70_score": 0.0774,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.1667,
+        "rf_prob": 0.0833,
+        "w70_score": 0.1417,
+        "recovered": false
+      }
+    },
+    {
+      "index": 92,
+      "ground_truth": 1,
+      "error_type": "FN",
+      "threshold_needed": ">= 0.5 (FN recover)",
+      "uncalibrated": {
+        "db_prob": 0.4685,
+        "rf_prob": 0.3784,
+        "w70_score": 0.4414,
+        "recovered": false
+      },
+      "platt": {
+        "db_prob": 0.6362,
+        "rf_prob": 0.0173,
+        "w70_score": 0.4506,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.5714,
+        "rf_prob": 0.0833,
+        "w70_score": 0.425,
+        "recovered": false
+      }
+    },
+    {
+      "index": 95,
+      "ground_truth": 1,
+      "error_type": "FN",
+      "threshold_needed": ">= 0.5 (FN recover)",
+      "uncalibrated": {
+        "db_prob": 0.04,
+        "rf_prob": 0.614,
+        "w70_score": 0.2122,
+        "recovered": false
+      },
+      "platt": {
+        "db_prob": 0.0584,
+        "rf_prob": 0.1776,
+        "w70_score": 0.0941,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.1667,
+        "rf_prob": 0.1,
+        "w70_score": 0.1467,
+        "recovered": false
+      }
+    },
+    {
+      "index": 101,
+      "ground_truth": 1,
+      "error_type": "FN",
+      "threshold_needed": ">= 0.5 (FN recover)",
+      "uncalibrated": {
+        "db_prob": 0.4588,
+        "rf_prob": 0.614,
+        "w70_score": 0.5054,
+        "recovered": true
+      },
+      "platt": {
+        "db_prob": 0.6187,
+        "rf_prob": 0.1776,
+        "w70_score": 0.4864,
+        "recovered": false
+      },
+      "isotonic": {
+        "db_prob": 0.5714,
+        "rf_prob": 0.1,
+        "w70_score": 0.43,
+        "recovered": false
+      }
+    }
+  ],
+  "summary": {
+    "uncal": 1,
+    "platt": 0,
+    "isotonic": 0
+  }
+}
