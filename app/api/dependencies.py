@@ -6,12 +6,12 @@ from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.services.detection_pipeline import DetectionPipeline
+from app.services.adaptive_detection_pipeline import AdaptiveDetectionPipeline
 
 
-async def get_pipeline(request: Request) -> DetectionPipeline:
+async def get_pipeline(request: Request) -> AdaptiveDetectionPipeline:
     """
-    Retrieve the DetectionPipeline from app.state.
+    Retrieve the AdaptiveDetectionPipeline from app.state.
     Built once at startup; injected into every request handler.
     """
     registry = getattr(request.app.state, "model_registry", None)
@@ -24,7 +24,7 @@ async def get_pipeline(request: Request) -> DetectionPipeline:
     # Build pipeline lazily on first request, cache on app.state
     pipeline = getattr(request.app.state, "_pipeline", None)
     if pipeline is None:
-        request.app.state._pipeline = DetectionPipeline(registry)
+        request.app.state._pipeline = AdaptiveDetectionPipeline(registry)
         pipeline = request.app.state._pipeline
 
     return pipeline
