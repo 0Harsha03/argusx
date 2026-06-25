@@ -39,14 +39,10 @@ logger = logging.getLogger(__name__)
 # Pattern categories that indicate a cyber-threat (non-injection) prompt.
 # Populated from PatternDetector category labels.
 _CYBER_CATEGORIES: frozenset = frozenset({
-    "malware",
+    "malware_generation",
     "exploitation",
-    "sql_injection",
     "credential_theft",
-    "phishing",
-    "ddos",
-    "privilege_escalation",
-    "remote_code_execution",
+    "cyber_abuse",
     "data_exfiltration",
 })
 

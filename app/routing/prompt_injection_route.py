@@ -25,7 +25,7 @@ import logging
 from typing import List
 
 from app.routing.base_route import BaseRoute, RouteResult
-from app.detection.sbert_semantic_analyzer import SBERTSemanticAnalyzer
+from app.detection.distilbert_semantic_analyzer import DistilBERTSemanticAnalyzer
 from app.detection.behavioral_analyzer import BehavioralAnalyzer
 from app.detection.anomaly_detector import AnomalyDetector as LOFDetector
 
@@ -36,8 +36,8 @@ class PromptInjectionRoute(BaseRoute):
     """
     Route for prompt injection threat class.
 
-    Internal engines (v9):
-      - Semantic:   SBERTSemanticAnalyzer  (all-MiniLM-L6-v2, 96 anchors)
+    Internal engines (v11):
+      - Semantic:   DistilBERTSemanticAnalyzer 
       - Behavioral: BehavioralAnalyzer     (RandomForest — unchanged)
       - Anomaly:    LOFDetector            (LocalOutlierFactor — unchanged)
 
@@ -48,9 +48,8 @@ class PromptInjectionRoute(BaseRoute):
     """
 
     def __init__(self, behavioral_model, vectorizer, anomaly_detector) -> None:
-        # ── Semantic engine (v9: SBERT — identical to v8) ─────────────────
-        # EXTENSION POINT: replace with DistilBERTSemanticAnalyzer in v9.1
-        self._semantic_analyzer = SBERTSemanticAnalyzer()
+        # ── Semantic engine (v11: DistilBERT) ─────────────────
+        self._semantic_analyzer = DistilBERTSemanticAnalyzer()
 
         # ── Behavioral + Anomaly (unchanged from v8) ──────────────────────
         self._behavioral_analyzer = BehavioralAnalyzer(behavioral_model, vectorizer)
@@ -91,7 +90,7 @@ class PromptInjectionRoute(BaseRoute):
             semantic_top_match=semantic_result.top_match,
             anomaly_is_anomaly=anomaly_result.is_anomaly,
             route_metadata={
-                "engine": "SBERTSemanticAnalyzer",          # v9.1: "DistilBERT"
+                "engine": "DistilBERTSemanticAnalyzer",
                 "max_similarity": semantic_result.max_similarity,
                 "above_threshold": semantic_result.above_threshold,
             },
