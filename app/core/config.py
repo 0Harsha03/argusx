@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     BEHAVIORAL_MODEL_PATH: str = "app/models/artifacts/behavioral_model.pkl"
     ANOMALY_DETECTOR_PATH: str = "app/models/artifacts/anomaly_detector.pkl"
     VECTORIZER_PATH: str = "app/models/artifacts/vectorizer.pkl"
+    DISTILBERT_MODEL_PATH: str = "models/distilbert_pi"
 
     # ── Threat Scoring Thresholds ─────────────────────────────────────────────
     SCORE_BLOCK_THRESHOLD: float = 75.0

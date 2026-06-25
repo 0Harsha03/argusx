@@ -211,7 +211,15 @@ class SBERTSemanticAnalyzer:
         self._load_model()
 
     def _load_model(self) -> None:
-        """Load the SBERT model and pre-compute anchor embeddings."""
+        """Load the SBERT model from global ModelRegistry, or initialize it."""
+        from app.services.model_registry import global_registry
+        
+        if global_registry and global_registry.sbert_model is not None:
+            logger.info("SBERTSemanticAnalyzer reusing pre-loaded SBERT from ModelRegistry")
+            self._model = global_registry.sbert_model
+            self._anchor_embeddings = global_registry.sbert_anchor_embeddings
+            return
+
         try:
             from sentence_transformers import SentenceTransformer
             logger.info("Loading SBERT model: %s", self.SBERT_MODEL_NAME)
