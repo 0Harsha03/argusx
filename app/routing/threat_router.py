@@ -73,11 +73,13 @@ class ThreatRouter:
         route_result = decision.route_result
     """
 
-    def __init__(self, behavioral_model, vectorizer, anomaly_detector) -> None:
+    def __init__(self, behavioral_model, vectorizer, anomaly_detector, platt_db=None, platt_rf=None) -> None:
         self._injection_route = PromptInjectionRoute(
             behavioral_model=behavioral_model,
             vectorizer=vectorizer,
             anomaly_detector=anomaly_detector,
+            platt_db=platt_db,
+            platt_rf=platt_rf,
         )
         self._cyber_route = CyberThreatRoute(
             behavioral_model=behavioral_model,

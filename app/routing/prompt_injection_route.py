@@ -47,7 +47,9 @@ class PromptInjectionRoute(BaseRoute):
       with .score (float 0-100), .top_match (Optional[str]).
     """
 
-    def __init__(self, behavioral_model, vectorizer, anomaly_detector) -> None:
+    def __init__(self, behavioral_model, vectorizer, anomaly_detector, platt_db=None, platt_rf=None) -> None:
+        self.platt_db = platt_db
+        self.platt_rf = platt_rf
         # ── Semantic engine (v11: DistilBERT) ─────────────────
         self._semantic_analyzer = DistilBERTSemanticAnalyzer()
 
