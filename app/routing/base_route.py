@@ -44,6 +44,10 @@ class RouteResult:
     # Extension point: route-specific metadata (e.g. DistilBERT logits)
     route_metadata: Dict[str, Any]           = field(default_factory=dict)
 
+    # v12 Architecture additions
+    binary_decision: Optional[bool]          = None
+    enforcement_action: Optional[str]        = None
+
 
 # ─── Abstract Base Route ──────────────────────────────────────────────────────
 

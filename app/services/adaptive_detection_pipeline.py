@@ -184,4 +184,8 @@ class AdaptiveDetectionPipeline:
             # v9 extension
             "selected_route":   routing.selected_route,
             "route_metadata":   rr.route_metadata,
+
+            # v12 extension
+            "binary_decision":    rr.binary_decision,
+            "enforcement_action": rr.enforcement_action,
         }
