@@ -43,6 +43,8 @@ class ModelRegistry:
         self.sbert_anchor_embeddings = None
         self.distilbert_tokenizer = None
         self.distilbert_model = None
+        self.platt_db         = None
+        self.platt_rf         = None
         self._loaded          = False
 
     @property
@@ -54,7 +56,9 @@ class ModelRegistry:
                 self.anomaly_detector, 
                 self.vectorizer,
                 self.sbert_model,
-                self.distilbert_model
+                self.distilbert_model,
+                self.platt_db,
+                self.platt_rf
             )
         )
 
@@ -66,6 +70,8 @@ class ModelRegistry:
         self.vectorizer       = self._load_pickle(settings.VECTORIZER_PATH, "vectorizer")
         self.behavioral_model = self._load_pickle(settings.BEHAVIORAL_MODEL_PATH, "behavioral_model")
         self.anomaly_detector = self._load_pickle(settings.ANOMALY_DETECTOR_PATH, "anomaly_detector")
+        self.platt_db         = self._load_pickle(settings.PLATT_DB_PATH, "platt_db")
+        self.platt_rf         = self._load_pickle(settings.PLATT_RF_PATH, "platt_rf")
         
         self._load_sbert()
         self._load_distilbert()
@@ -74,6 +80,11 @@ class ModelRegistry:
             raise RuntimeError(
                 "Critical model(s) failed to load. "
                 "ArgusX cannot start without behavioral_model + vectorizer."
+            )
+        if self.platt_db is None or self.platt_rf is None:
+            raise RuntimeError(
+                "Calibration models failed to load. "
+                "ArgusX cannot start without Platt scaling artifacts."
             )
         if self.sbert_model is None or self.distilbert_model is None:
             raise RuntimeError(
@@ -84,12 +95,14 @@ class ModelRegistry:
         self._loaded = True
         logger.info(
             "ModelRegistry: all artifacts loaded | behavioral_model=%s | "
-            "anomaly_detector=%s | vectorizer=%s | sbert=%s | distilbert=%s",
+            "anomaly_detector=%s | vectorizer=%s | sbert=%s | distilbert=%s | platt_db=%s | platt_rf=%s",
             type(self.behavioral_model).__name__,
             type(self.anomaly_detector).__name__,
             type(self.vectorizer).__name__,
             type(self.sbert_model).__name__,
             type(self.distilbert_model).__name__,
+            type(self.platt_db).__name__,
+            type(self.platt_rf).__name__,
         )
 
     def _load_pickle(self, path: str, name: str):
@@ -154,4 +167,6 @@ class ModelRegistry:
             "vectorizer":       self.vectorizer is not None,
             "sbert_model":      self.sbert_model is not None,
             "distilbert_model": self.distilbert_model is not None,
+            "platt_db":         self.platt_db is not None,
+            "platt_rf":         self.platt_rf is not None,
         }
