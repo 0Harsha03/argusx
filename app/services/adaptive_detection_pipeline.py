@@ -124,23 +124,40 @@ class AdaptiveDetectionPipeline:
 
         # ── v9: ThreatRouter dispatch ─────────────────────────────────────
         routing = self._router.route(
-            text=clean_prompt,
+            raw_prompt=raw_prompt,
+            clean_prompt=clean_prompt,
             pattern_score=pattern_result.score,
             pattern_categories=pattern_categories,
         )
         rr = routing.route_result  # RouteResult
 
         # ── Layer 5: Threat Scoring ───────────────────────────────────────
-        threat = self._threat_scorer.compute(
-            pattern_score=rr.pattern_score,
-            semantic_score=rr.semantic_score,
-            behavioral_score=rr.behavioral_score,
-            anomaly_score=rr.anomaly_score,
-            matched_patterns=pattern_result.matched_rules,
-            behavioral_flags=rr.behavioral_flags,
-            top_category=pattern_result.top_category,
-            prompt=clean_prompt,
-        )
+        if rr.final_decision:
+            # Bypass ThreatScorer: Route encapsulates its own threshold logic
+            class _DummyThreat: pass
+            threat = _DummyThreat()
+            threat.decision = rr.enforcement_action or "ALLOW"
+            threat.threat_category = pattern_result.top_category
+            threat.sanitized_prompt = None
+            threat.explanation = f"Decision overridden by {routing.selected_route}."
+            threat.pattern_score = rr.pattern_score
+            threat.semantic_score = rr.semantic_score
+            threat.behavioral_score = rr.behavioral_score
+            threat.anomaly_score = rr.anomaly_score
+            threat.final_score = rr.final_score
+            threat.matched_patterns = pattern_result.matched_rules
+            threat.behavioral_flags = rr.behavioral_flags
+        else:
+            threat = self._threat_scorer.compute(
+                pattern_score=rr.pattern_score,
+                semantic_score=rr.semantic_score,
+                behavioral_score=rr.behavioral_score,
+                anomaly_score=rr.anomaly_score,
+                matched_patterns=pattern_result.matched_rules,
+                behavioral_flags=rr.behavioral_flags,
+                top_category=pattern_result.top_category,
+                prompt=clean_prompt,
+            )
 
         elapsed_ms = round((time.perf_counter() - start) * 1000, 2)
 

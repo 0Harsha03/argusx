@@ -47,6 +47,8 @@ class RouteResult:
     # v12 Architecture additions
     binary_decision: Optional[bool]          = None
     enforcement_action: Optional[str]        = None
+    final_decision: bool                     = False
+    final_score: float                       = 0.0
 
 
 # ─── Abstract Base Route ──────────────────────────────────────────────────────
@@ -71,13 +73,14 @@ class BaseRoute(ABC):
         ...
 
     @abstractmethod
-    def process(self, text: str, pattern_score: float,
+    def process(self, raw_prompt: str, clean_prompt: str, pattern_score: float,
                 pattern_categories: List[str]) -> RouteResult:
         """
-        Run all route-specific detection logic on *text*.
+        Run all route-specific detection logic.
 
         Args:
-            text:               Preprocessed (normalized) prompt text.
+            raw_prompt:         Original unmodified prompt text.
+            clean_prompt:       Preprocessed (normalized) prompt text.
             pattern_score:      Score already produced by PatternDetector
                                 (shared across all routes — computed once).
             pattern_categories: Top threat categories from PatternDetector.

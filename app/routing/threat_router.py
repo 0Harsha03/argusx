@@ -94,7 +94,8 @@ class ThreatRouter:
 
     def route(
         self,
-        text: str,
+        raw_prompt: str,
+        clean_prompt: str,
         pattern_score: float,
         pattern_categories: List[str],
     ) -> RoutingDecision:
@@ -103,7 +104,8 @@ class ThreatRouter:
         delegate processing to the selected route.
 
         Args:
-            text:               Preprocessed prompt text.
+            raw_prompt:         Original unmodified prompt text.
+            clean_prompt:       Preprocessed prompt text.
             pattern_score:      Score from PatternDetector (0-100).
             pattern_categories: List of category strings from PatternDetector.
 
@@ -117,7 +119,8 @@ class ThreatRouter:
         )
 
         result = selected.process(
-            text=text,
+            raw_prompt=raw_prompt,
+            clean_prompt=clean_prompt,
             pattern_score=pattern_score,
             pattern_categories=pattern_categories,
         )

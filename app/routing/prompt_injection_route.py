@@ -66,20 +66,20 @@ class PromptInjectionRoute(BaseRoute):
     def route_name(self) -> str:
         return "PromptInjectionRoute"
 
-    def process(self, text: str, pattern_score: float,
+    def process(self, raw_prompt: str, clean_prompt: str, pattern_score: float,
                 pattern_categories: List[str]) -> RouteResult:
         """
         Run semantic, behavioral, and anomaly analysis for injection threats.
 
         Returns scores numerically identical to v8 DetectionPipeline.
         """
-        semantic_result = self._semantic_analyzer.analyze(text)
+        semantic_result = self._semantic_analyzer.analyze(raw_prompt)
         behavioral_result = self._behavioral_analyzer.analyze(
-            text=text,
+            text=raw_prompt,
             pattern_score=pattern_score,
             pattern_categories=pattern_categories,
         )
-        anomaly_result = self._anomaly_detector.analyze(text)
+        anomaly_result = self._anomaly_detector.analyze(raw_prompt)
 
         return RouteResult(
             route_name=self.route_name,
