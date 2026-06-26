@@ -23,6 +23,7 @@ class SemanticAnalysisResult:
     max_similarity: float               # raw probability (0–1)
     top_match: Optional[str] = None     
     above_threshold: bool = False
+    raw_probability: float = 0.0        # exact full-precision output
 
 class DistilBERTSemanticAnalyzer:
     """
@@ -94,7 +95,8 @@ class DistilBERTSemanticAnalyzer:
                 score=round(score, 2),
                 max_similarity=round(p, 4),
                 top_match="DistilBERT PI Prediction",
-                above_threshold=(p >= self.SIMILARITY_THRESHOLD)
+                above_threshold=(p >= self.SIMILARITY_THRESHOLD),
+                raw_probability=p,
             )
             
         except Exception as exc:

@@ -188,6 +188,7 @@ class SemanticAnalysisResult:
     max_similarity: float               # raw cosine similarity (0–1)
     top_match: Optional[str] = None     # closest anchor prompt
     above_threshold: bool = False
+    raw_probability: float = 0.0        # exact full-precision output
 
 
 class SBERTSemanticAnalyzer:
@@ -271,6 +272,7 @@ class SBERTSemanticAnalyzer:
                 max_similarity=round(max_sim, 4),
                 top_match=self._anchors[top_idx],
                 above_threshold=max_sim >= self.SIMILARITY_THRESHOLD,
+                raw_probability=max_sim,
             )
         except Exception as exc:
             logger.error("SBERT semantic analysis failed: %s", exc)

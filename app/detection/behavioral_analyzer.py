@@ -55,6 +55,7 @@ class BehavioralAnalysisResult:
     score: float                                     # 0–100
     is_adversarial: bool = False
     adversarial_confidence: float = 0.0             # RF probability (0–1)
+    raw_probability: float = 0.0                    # exact full-precision output
     behavioral_flags: List[str] = field(default_factory=list)
     explanation: str = ""
 
@@ -172,6 +173,7 @@ class BehavioralAnalyzer:
             score=round(score, 2),
             is_adversarial=is_adversarial,
             adversarial_confidence=round(adv_confidence, 4),
+            raw_probability=adv_confidence,
             behavioral_flags=flags,
             explanation=explanation,
         )

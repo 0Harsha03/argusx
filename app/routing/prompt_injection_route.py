@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import logging
 from typing import List
+import numpy as np
 
 from app.routing.base_route import BaseRoute, RouteResult
 from app.detection.distilbert_semantic_analyzer import DistilBERTSemanticAnalyzer
@@ -81,6 +82,19 @@ class PromptInjectionRoute(BaseRoute):
         )
         anomaly_result = self._anomaly_detector.analyze(raw_prompt)
 
+        # ── Phase 3B.1: Calibrated Probability Generation ─────────────────
+        db_raw = semantic_result.raw_probability
+        rf_raw = behavioral_result.raw_probability
+
+        db_calibrated = db_raw
+        rf_calibrated = rf_raw
+
+        if self.platt_db is not None:
+            db_calibrated = float(self.platt_db.predict_proba(np.array([[db_raw]]))[0, 1])
+        
+        if self.platt_rf is not None:
+            rf_calibrated = float(self.platt_rf.predict_proba(np.array([[rf_raw]]))[0, 1])
+
         return RouteResult(
             route_name=self.route_name,
             pattern_score=pattern_score,
@@ -95,5 +109,10 @@ class PromptInjectionRoute(BaseRoute):
                 "engine": "DistilBERTSemanticAnalyzer",
                 "max_similarity": semantic_result.max_similarity,
                 "above_threshold": semantic_result.above_threshold,
+                # Phase 3B.1 Diagnostics
+                "raw_db_probability": db_raw,
+                "raw_rf_probability": rf_raw,
+                "calibrated_db_probability": db_calibrated,
+                "calibrated_rf_probability": rf_calibrated,
             },
         )
