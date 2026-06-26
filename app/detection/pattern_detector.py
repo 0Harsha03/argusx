@@ -122,7 +122,7 @@ _RULES: List[PatternRule] = [
             re.IGNORECASE | re.DOTALL,
         ),
         weight=92,
-        category="DATA_EXFILTRATION",
+        category="ROLE_MANIPULATION",
     ),
 
     # ── Data Exfiltration ─────────────────────────────────────────────────
