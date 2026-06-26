@@ -29,6 +29,7 @@ from app.routing.base_route import BaseRoute, RouteResult
 from app.detection.distilbert_semantic_analyzer import DistilBERTSemanticAnalyzer
 from app.detection.behavioral_analyzer import BehavioralAnalyzer
 from app.detection.anomaly_detector import AnomalyDetector as LOFDetector
+from app.detection.pattern_detector import PatternDetector
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,9 @@ class PromptInjectionRoute(BaseRoute):
         # ── Behavioral + Anomaly (unchanged from v8) ──────────────────────
         self._behavioral_analyzer = BehavioralAnalyzer(behavioral_model, vectorizer)
         self._anomaly_detector = LOFDetector(anomaly_detector, vectorizer)
+        
+        # ── Pattern Override Engine ───────────────────────────────────────
+        self._pattern_detector = PatternDetector()
 
         logger.info(
             "PromptInjectionRoute initialized | semantic=%s",
@@ -95,6 +99,32 @@ class PromptInjectionRoute(BaseRoute):
         if self.platt_rf is not None:
             rf_calibrated = float(self.platt_rf.predict_proba(np.array([[rf_raw]]))[0, 1])
 
+        # ── Phase 3B.2: Fusion & Decision ─────────────────────────────────
+        fused_score = 0.90 * db_calibrated + 0.10 * rf_calibrated
+
+        pd_res = self._pattern_detector.analyze(raw_prompt)
+        pattern_override = any(rule in pd_res.matched_rules for rule in ("translation_bypass", "obfuscated_ignore"))
+
+        if pattern_override:
+            binary_decision = True
+        else:
+            binary_decision = bool(fused_score >= 0.5)
+
+        if fused_score < 0.50:
+            enforcement_action = "ALLOW"
+        elif 0.50 <= fused_score < 0.70:
+            enforcement_action = "SANITIZE"
+        elif 0.70 <= fused_score < 0.90:
+            enforcement_action = "FLAG"
+        else:
+            enforcement_action = "BLOCK"
+
+        # ── Phase 3B.2a: Enforcement Floor ─────────────────────────────────
+        if pattern_override and enforcement_action == "ALLOW":
+            enforcement_action = "SANITIZE"
+
+        final_score = float(fused_score * 100.0)
+
         return RouteResult(
             route_name=self.route_name,
             pattern_score=pattern_score,
@@ -105,6 +135,10 @@ class PromptInjectionRoute(BaseRoute):
             behavioral_flags=behavioral_result.behavioral_flags,
             semantic_top_match=semantic_result.top_match,
             anomaly_is_anomaly=anomaly_result.is_anomaly,
+            binary_decision=binary_decision,
+            enforcement_action=enforcement_action,
+            final_decision=True,
+            final_score=final_score,
             route_metadata={
                 "engine": "DistilBERTSemanticAnalyzer",
                 "max_similarity": semantic_result.max_similarity,
@@ -114,5 +148,8 @@ class PromptInjectionRoute(BaseRoute):
                 "raw_rf_probability": rf_raw,
                 "calibrated_db_probability": db_calibrated,
                 "calibrated_rf_probability": rf_calibrated,
+                # Phase 3B.2 Diagnostics
+                "fused_score": fused_score,
+                "pattern_override": pattern_override,
             },
         )
