@@ -1,0 +1,830 @@
+{
+  "tree": [
+    "\ud83d\udcc1 .pytest_cache/",
+    "  \ud83d\udcc1 v/",
+    "    \ud83d\udcc1 cache/",
+    "      \ud83d\udcc4 lastfailed (0.00 KB, 2026-06-19 02:12)",
+    "      \ud83d\udcc4 nodeids (21.78 KB, 2026-06-24 23:52)",
+    "  \ud83d\udcc4 .gitignore (0.04 KB, 2026-05-13 00:50)",
+    "  \ud83d\udcc4 CACHEDIR.TAG (0.19 KB, 2026-05-13 00:50)",
+    "  \ud83d\udcc4 README.md (0.30 KB, 2026-05-13 00:50)",
+    "\ud83d\udcc1 __pycache__/",
+    "  \ud83d\udcc4 main.cpython-313.pyc (3.98 KB, 2026-05-04 19:33)",
+    "\ud83d\udcc1 app/",
+    "  \ud83d\udcc1 __pycache__/",
+    "    \ud83d\udcc4 __init__.cpython-313.pyc (0.20 KB, 2026-05-04 19:33)",
+    "  \ud83d\udcc1 api/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.18 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 dependencies.cpython-313.pyc (1.49 KB, 2026-06-26 01:32)",
+    "      \ud83d\udcc4 router.cpython-313.pyc (0.82 KB, 2026-05-05 18:51)",
+    "      \ud83d\udcc4 schemas.cpython-313.pyc (5.15 KB, 2026-06-27 14:52)",
+    "    \ud83d\udcc1 endpoints/",
+    "      \ud83d\udcc1 __pycache__/",
+    "        \ud83d\udcc4 __init__.cpython-313.pyc (0.20 KB, 2026-05-04 19:33)",
+    "        \ud83d\udcc4 analyze.cpython-313.pyc (5.09 KB, 2026-05-13 01:55)",
+    "        \ud83d\udcc4 health.cpython-313.pyc (2.95 KB, 2026-05-04 19:34)",
+    "        \ud83d\udcc4 logs.cpython-313.pyc (4.18 KB, 2026-05-04 19:34)",
+    "        \ud83d\udcc4 protect.cpython-313.pyc (12.08 KB, 2026-05-13 01:16)",
+    "      \ud83d\udcc4 __init__.py (0.03 KB, 2026-05-04 19:29)",
+    "      \ud83d\udcc4 analyze.py (4.56 KB, 2026-05-13 01:55)",
+    "      \ud83d\udcc4 health.py (2.01 KB, 2026-05-04 19:29)",
+    "      \ud83d\udcc4 logs.py (3.29 KB, 2026-05-04 19:30)",
+    "      \ud83d\udcc4 protect.py (13.60 KB, 2026-05-13 01:07)",
+    "    \ud83d\udcc4 __init__.py (0.02 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 dependencies.py (1.04 KB, 2026-06-26 01:32)",
+    "    \ud83d\udcc4 router.py (0.63 KB, 2026-05-05 18:24)",
+    "    \ud83d\udcc4 schemas.py (4.78 KB, 2026-06-26 13:38)",
+    "  \ud83d\udcc1 core/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.21 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 config.cpython-313.pyc (3.54 KB, 2026-06-26 13:17)",
+    "      \ud83d\udcc4 database.cpython-313.pyc (1.87 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 logging_config.cpython-313.pyc (1.83 KB, 2026-05-04 19:34)",
+    "    \ud83d\udcc4 __init__.py (0.05 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 config.py (5.00 KB, 2026-06-26 13:16)",
+    "    \ud83d\udcc4 database.py (1.62 KB, 2026-05-04 19:22)",
+    "    \ud83d\udcc4 logging_config.py (1.13 KB, 2026-05-04 19:22)",
+    "  \ud83d\udcc1 detection/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.19 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 anomaly_detector.cpython-313.pyc (4.93 KB, 2026-05-04 19:34)",
+    "      \ud83d\udcc4 behavioral_analyzer.cpython-313.pyc (7.05 KB, 2026-06-26 14:17)",
+    "      \ud83d\udcc4 distilbert_semantic_analyzer.cpython-313.pyc (5.03 KB, 2026-06-26 14:17)",
+    "      \ud83d\udcc4 pattern_detector.cpython-313.pyc (21.05 KB, 2026-06-26 15:49)",
+    "      \ud83d\udcc4 sbert_semantic_analyzer.cpython-313.pyc (12.65 KB, 2026-06-26 14:18)",
+    "      \ud83d\udcc4 semantic_analyzer.cpython-313.pyc (6.10 KB, 2026-06-20 23:27)",
+    "      \ud83d\udcc4 threat_scorer.cpython-313.pyc (13.76 KB, 2026-06-21 20:45)",
+    "    \ud83d\udcc4 __init__.py (0.03 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 anomaly_detector.py (4.04 KB, 2026-05-04 19:27)",
+    "    \ud83d\udcc4 behavioral_analyzer.py (7.19 KB, 2026-06-26 14:17)",
+    "    \ud83d\udcc4 distilbert_semantic_analyzer.py (3.99 KB, 2026-06-26 14:17)",
+    "    \ud83d\udcc4 pattern_detector.py (32.95 KB, 2026-06-26 15:49)",
+    "    \ud83d\udcc4 sbert_semantic_analyzer.py (16.69 KB, 2026-06-26 14:18)",
+    "    \ud83d\udcc4 semantic_analyzer.py (5.72 KB, 2026-06-20 23:26)",
+    "    \ud83d\udcc4 threat_scorer.py (15.53 KB, 2026-06-21 20:44)",
+    "  \ud83d\udcc1 models/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.19 KB, 2026-05-04 19:34)",
+    "      \ud83d\udcc4 db_models.cpython-313.pyc (3.53 KB, 2026-05-04 19:34)",
+    "    \ud83d\udcc1 artifacts/",
+    "      \ud83d\udcc4 anomaly_detector.pkl (0.24 KB, 2026-06-25 23:06)",
+    "      \ud83d\udcc4 behavioral_model.pkl (496.70 KB, 2026-06-21 00:49)",
+    "      \ud83d\udcc4 platt_db.pkl (0.86 KB, 2026-06-26 13:16)",
+    "      \ud83d\udcc4 platt_rf.pkl (0.86 KB, 2026-06-26 13:16)",
+    "      \ud83d\udcc4 vectorizer.pkl (177.73 KB, 2026-06-21 00:49)",
+    "    \ud83d\udcc4 __init__.py (0.03 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 db_models.py (3.82 KB, 2026-05-04 19:24)",
+    "  \ud83d\udcc1 output_scrutiny/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.44 KB, 2026-05-13 01:09)",
+    "      \ud83d\udcc4 scrutinizer.cpython-313.pyc (9.83 KB, 2026-05-13 01:39)",
+    "    \ud83d\udcc4 __init__.py (0.28 KB, 2026-05-13 01:05)",
+    "    \ud83d\udcc4 scrutinizer.py (13.50 KB, 2026-05-13 01:39)",
+    "  \ud83d\udcc1 routing/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.22 KB, 2026-06-23 19:41)",
+    "      \ud83d\udcc4 base_route.cpython-313.pyc (3.62 KB, 2026-06-26 13:58)",
+    "      \ud83d\udcc4 cyber_threat_route.cpython-313.pyc (4.08 KB, 2026-06-26 13:58)",
+    "      \ud83d\udcc4 prompt_injection_route.cpython-313.pyc (6.26 KB, 2026-06-26 14:40)",
+    "      \ud83d\udcc4 threat_router.cpython-313.pyc (6.67 KB, 2026-06-26 22:33)",
+    "    \ud83d\udcc4 __init__.py (0.06 KB, 2026-06-23 19:38)",
+    "    \ud83d\udcc4 base_route.py (3.35 KB, 2026-06-26 13:57)",
+    "    \ud83d\udcc4 cyber_threat_route.py (3.44 KB, 2026-06-26 13:57)",
+    "    \ud83d\udcc4 prompt_injection_route.py (6.40 KB, 2026-06-26 14:39)",
+    "    \ud83d\udcc4 threat_router.py (5.77 KB, 2026-06-26 22:32)",
+    "  \ud83d\udcc1 services/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.19 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 adaptive_detection_pipeline.cpython-313.pyc (8.52 KB, 2026-06-26 22:33)",
+    "      \ud83d\udcc4 detection_pipeline.cpython-313.pyc (6.24 KB, 2026-05-04 19:33)",
+    "      \ud83d\udcc4 llm_service.cpython-313.pyc (19.12 KB, 2026-05-13 00:57)",
+    "      \ud83d\udcc4 model_registry.cpython-313.pyc (9.56 KB, 2026-06-26 22:33)",
+    "      \ud83d\udcc4 sbert_detection_pipeline.cpython-313.pyc (2.04 KB, 2026-06-21 01:01)",
+    "    \ud83d\udcc4 __init__.py (0.03 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 adaptive_detection_pipeline.py (8.28 KB, 2026-06-26 22:32)",
+    "    \ud83d\udcc4 detection_pipeline.py (6.01 KB, 2026-05-04 19:29)",
+    "    \ud83d\udcc4 llm_service.py (19.50 KB, 2026-05-13 00:56)",
+    "    \ud83d\udcc4 model_registry.py (7.49 KB, 2026-06-26 22:33)",
+    "    \ud83d\udcc4 sbert_detection_pipeline.py (1.42 KB, 2026-06-21 01:00)",
+    "  \ud83d\udcc1 utils/",
+    "    \ud83d\udcc1 __pycache__/",
+    "      \ud83d\udcc4 __init__.cpython-313.pyc (0.18 KB, 2026-05-04 19:34)",
+    "      \ud83d\udcc4 preprocessor.cpython-313.pyc (4.84 KB, 2026-05-04 19:34)",
+    "    \ud83d\udcc4 __init__.py (0.02 KB, 2026-05-04 19:24)",
+    "    \ud83d\udcc4 preprocessor.py (3.98 KB, 2026-05-04 19:28)",
+    "  \ud83d\udcc4 __init__.py (0.04 KB, 2026-05-04 19:23)",
+    "\ud83d\udcc1 data/",
+    "  \ud83d\udcc1 pi_augmentation/",
+    "    \ud83d\udcc4 context_dilution.csv (7.64 KB, 2026-06-24 09:11)",
+    "    \ud83d\udcc4 cross_lingual_benign.csv (12.83 KB, 2026-06-24 09:11)",
+    "    \ud83d\udcc4 translation_bypass.csv (8.30 KB, 2026-06-24 09:11)",
+    "  \ud83d\udcc1 pi_corpus/",
+    "    \ud83d\udcc4 stats.json (0.46 KB, 2026-06-24 01:39)",
+    "    \ud83d\udcc4 test.csv (919.65 KB, 2026-06-24 01:39)",
+    "    \ud83d\udcc4 train.csv (7.56 MB, 2026-06-24 01:39)",
+    "    \ud83d\udcc4 val.csv (937.57 KB, 2026-06-24 01:39)",
+    "  \ud83d\udcc4 anchors_v7_baseline.json (4.39 KB, 2026-06-22 23:32)",
+    "\ud83d\udcc1 docker/",
+    "  \ud83d\udcc4 docker-compose.yml (2.03 KB, 2026-05-04 19:31)",
+    "  \ud83d\udcc4 Dockerfile (1.31 KB, 2026-05-04 19:31)",
+    "\ud83d\udcc1 evaluation/",
+    "  \ud83d\udcc1 results/",
+    "    \ud83d\udcc4 confusion_matrix_20260618_013944.png (120.15 KB, 2026-06-18 01:40)",
+    "    \ud83d\udcc4 confusion_matrix_20260618_124450.png (119.40 KB, 2026-06-18 12:45)",
+    "    \ud83d\udcc4 confusion_matrix_20260619_001644.png (117.40 KB, 2026-06-19 00:17)",
+    "    \ud83d\udcc4 confusion_matrix_20260619_021316.png (117.05 KB, 2026-06-19 02:13)",
+    "    \ud83d\udcc4 eval_metrics_20260618_012643.csv (0.29 KB, 2026-06-18 01:37)",
+    "    \ud83d\udcc4 eval_metrics_20260618_013944.csv (0.74 KB, 2026-06-18 01:40)",
+    "    \ud83d\udcc4 eval_metrics_20260618_124450.csv (0.74 KB, 2026-06-18 12:45)",
+    "    \ud83d\udcc4 eval_metrics_20260619_001644.csv (0.72 KB, 2026-06-19 00:17)",
+    "    \ud83d\udcc4 eval_metrics_20260619_021316.csv (0.71 KB, 2026-06-19 02:13)",
+    "    \ud83d\udcc4 eval_report_20260618_012643.json (0.48 KB, 2026-06-18 01:37)",
+    "    \ud83d\udcc4 eval_report_20260618_013944.json (2.24 KB, 2026-06-18 01:40)",
+    "    \ud83d\udcc4 eval_report_20260618_124450.json (2.24 KB, 2026-06-18 12:45)",
+    "    \ud83d\udcc4 eval_report_20260619_001644.json (2.22 KB, 2026-06-19 00:17)",
+    "    \ud83d\udcc4 eval_report_20260619_021316.json (2.22 KB, 2026-06-19 02:13)",
+    "    \ud83d\udcc4 eval_results_20260618_012643.csv (150.17 KB, 2026-06-18 01:37)",
+    "    \ud83d\udcc4 eval_results_20260618_013944.csv (129.65 KB, 2026-06-18 01:40)",
+    "    \ud83d\udcc4 eval_results_20260618_124450.csv (131.53 KB, 2026-06-18 12:45)",
+    "    \ud83d\udcc4 eval_results_20260619_001644.csv (134.77 KB, 2026-06-19 00:17)",
+    "    \ud83d\udcc4 eval_results_20260619_021316.csv (135.10 KB, 2026-06-19 02:13)",
+    "  \ud83d\udcc4 __init__.py (0.03 KB, 2026-06-18 01:09)",
+    "  \ud83d\udcc4 benign.json (5.61 KB, 2026-06-18 01:03)",
+    "  \ud83d\udcc4 blind_dataset.json (18.78 KB, 2026-06-21 01:26)",
+    "  \ud83d\udcc4 credential_theft.json (8.03 KB, 2026-06-18 01:06)",
+    "  \ud83d\udcc4 generate_confusion_matrix.py (14.17 KB, 2026-06-18 01:09)",
+    "  \ud83d\udcc4 jailbreaks.json (7.83 KB, 2026-06-18 01:06)",
+    "  \ud83d\udcc4 malware_generation.json (8.41 KB, 2026-06-18 01:05)",
+    "  \ud83d\udcc4 prompt_injection.json (7.87 KB, 2026-06-18 01:04)",
+    "  \ud83d\udcc4 run_evaluation.py (28.03 KB, 2026-06-18 01:08)",
+    "  \ud83d\udcc4 system_extraction.json (7.38 KB, 2026-06-18 01:05)",
+    "\ud83d\udcc1 models/",
+    "  \ud83d\udcc1 distilbert_pi/",
+    "    \ud83d\udcc4 config.json (0.62 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 model.safetensors (255.43 MB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 special_tokens_map.json (0.13 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 tokenizer.json (694.98 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 tokenizer_config.json (1.25 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 vocab.txt (226.08 KB, 2026-06-24 06:06)",
+    "  \ud83d\udcc1 distilbert_pi_augmented/",
+    "    \ud83d\udcc4 config.json (0.62 KB, 2026-06-24 14:44)",
+    "    \ud83d\udcc4 model.safetensors (255.43 MB, 2026-06-24 14:44)",
+    "    \ud83d\udcc4 special_tokens_map.json (0.13 KB, 2026-06-24 14:44)",
+    "    \ud83d\udcc4 tokenizer.json (694.98 KB, 2026-06-24 14:44)",
+    "    \ud83d\udcc4 tokenizer_config.json (1.25 KB, 2026-06-24 14:44)",
+    "    \ud83d\udcc4 vocab.txt (226.08 KB, 2026-06-24 14:44)",
+    "  \ud83d\udcc1 distilbert_sst2_pi/",
+    "  \ud83d\udcc4 router_classifier.pkl (119.87 KB, 2026-06-26 21:45)",
+    "  \ud83d\udcc4 router_clf_B.pkl (117.72 KB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_clf_C.pkl (1.86 MB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_clf_D.pkl (2.13 MB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_vec_B.pkl (321.50 KB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_vec_C.pkl (6.69 MB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_vec_D.pkl (8.19 MB, 2026-06-26 21:54)",
+    "  \ud83d\udcc4 router_vectorizer.pkl (326.56 KB, 2026-06-26 21:45)",
+    "\ud83d\udcc1 results/",
+    "  \ud83d\udcc1 calibrated_fusion/",
+    "    \ud83d\udcc4 calibration_metrics.json (0.49 KB, 2026-06-24 08:42)",
+    "    \ud83d\udcc4 forensic_recovery.json (3.43 KB, 2026-06-24 08:42)",
+    "    \ud83d\udcc4 fusion_metrics.json (5.73 KB, 2026-06-24 08:42)",
+    "    \ud83d\udcc4 recommendation.json (0.46 KB, 2026-06-24 08:42)",
+    "  \ud83d\udcc1 cyberseceval_generalization/",
+    "    \ud83d\udcc4 classification_report.txt (0.71 KB, 2026-06-25 01:18)",
+    "    \ud83d\udcc4 confusion_matrix.json (0.44 KB, 2026-06-25 01:18)",
+    "    \ud83d\udcc4 metrics.json (0.68 KB, 2026-06-25 01:18)",
+    "  \ud83d\udcc1 distilbert_pi/",
+    "    \ud83d\udcc4 classification_report.txt (0.74 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 confusion_matrix.json (0.14 KB, 2026-06-24 06:06)",
+    "    \ud83d\udcc4 metrics.json (1.30 KB, 2026-06-24 06:06)",
+    "  \ud83d\udcc1 distilbert_reproduction/",
+    "    \ud83d\udcc4 classification_report.txt (0.56 KB, 2026-06-24 23:01)",
+    "    \ud83d\udcc4 confusion_matrix.json (0.14 KB, 2026-06-24 23:01)",
+    "    \ud83d\udcc4 metrics.json (0.09 KB, 2026-06-24 23:01)",
+    "  \ud83d\udcc1 distilbert_rf_fusion/",
+    "    \ud83d\udcc4 best_strategy.json (4.48 KB, 2026-06-24 08:18)",
+    "    \ud83d\udcc4 fusion_comparison.json (2.51 KB, 2026-06-24 08:18)",
+    "    \ud83d\udcc4 fusion_metrics.json (2.65 KB, 2026-06-24 08:18)",
+    "  \ud83d\udcc1 distilbert_sst2_pi/",
+    "  \ud83d\udcc1 fusion_forensics/",
+    "    \ud83d\udcc4 calibration_report.json (1.69 KB, 2026-06-24 08:27)",
+    "    \ud83d\udcc4 error_case_table.json (9.65 KB, 2026-06-24 08:27)",
+    "    \ud83d\udcc4 root_cause_report.json (2.55 KB, 2026-06-24 08:27)",
+    "    \ud83d\udcc4 threshold_analysis.json (7.91 KB, 2026-06-24 08:27)",
+    "  \ud83d\udcc1 harelix_audit/",
+    "  \ud83d\udcc1 residual_error_analysis/",
+    "    \ud83d\udcc4 error_table.json (3.58 KB, 2026-06-24 08:56)",
+    "    \ud83d\udcc4 improvement_ranking.json (3.19 KB, 2026-06-24 08:56)",
+    "    \ud83d\udcc4 root_cause_report.json (2.53 KB, 2026-06-24 08:56)",
+    "    \ud83d\udcc4 taxonomy_report.json (0.77 KB, 2026-06-24 08:56)",
+    "  \ud83d\udcc1 rf_audit/",
+    "    \ud83d\udcc4 error_overlap.json (0.28 KB, 2026-06-24 08:09)",
+    "    \ud83d\udcc4 rf_audit_report.json (0.84 KB, 2026-06-24 08:09)",
+    "    \ud83d\udcc4 rf_metrics.json (0.14 KB, 2026-06-24 08:09)",
+    "  \ud83d\udcc1 v10_generalization/",
+    "    \ud83d\udcc4 delta.json (0.13 KB, 2026-06-25 01:10)",
+    "    \ud83d\udcc4 per_sample.csv (22.98 KB, 2026-06-25 01:10)",
+    "    \ud83d\udcc4 rule_utilization.json (0.26 KB, 2026-06-25 01:10)",
+    "    \ud83d\udcc4 v10_metrics.json (0.17 KB, 2026-06-25 01:10)",
+    "    \ud83d\udcc4 v96_metrics.json (0.17 KB, 2026-06-25 01:10)",
+    "  \ud83d\udcc1 v10_pattern_recovery/",
+    "    \ud83d\udcc4 classification_report.txt (0.44 KB, 2026-06-26 11:40)",
+    "    \ud83d\udcc4 confusion_matrix.json (0.05 KB, 2026-06-26 11:40)",
+    "    \ud83d\udcc4 metrics.json (0.66 KB, 2026-06-26 11:40)",
+    "  \ud83d\udcc1 v9_8_augmented/",
+    "  \ud83d\udcc4 v12_spml_diagnostics.json (0.16 KB, 2026-06-26 16:12)",
+    "\ud83d\udcc1 scratch/",
+    "  \ud83d\udcc4 audit.py (3.79 KB, 2026-06-26 15:45)",
+    "\ud83d\udcc1 scripts/",
+    "  \ud83d\udcc1 __pycache__/",
+    "    \ud83d\udcc4 eval_v10_pattern_recovery.cpython-313.pyc (16.14 KB, 2026-06-26 13:13)",
+    "  \ud83d\udcc4 analyze_residual_errors.py (21.48 KB, 2026-06-24 08:53)",
+    "  \ud83d\udcc4 audit_cyberseceval.py (14.97 KB, 2026-06-21 02:16)",
+    "  \ud83d\udcc4 audit_rf_for_fusion.py (8.17 KB, 2026-06-24 08:09)",
+    "  \ud83d\udcc4 build_pi_corpus.py (16.35 KB, 2026-06-24 01:38)",
+    "  \ud83d\udcc4 eval_blind_benchmark.py (8.34 KB, 2026-06-21 01:27)",
+    "  \ud83d\udcc4 eval_calibrated_fusion.py (22.52 KB, 2026-06-24 08:40)",
+    "  \ud83d\udcc4 eval_context_dilution.py (7.89 KB, 2026-06-22 23:32)",
+    "  \ud83d\udcc4 eval_cyberseceval.py (15.22 KB, 2026-06-21 02:02)",
+    "  \ud83d\udcc4 eval_cysecbench.py (3.54 KB, 2026-06-27 01:24)",
+    "  \ud83d\udcc4 eval_cysecbench_oracle.py (3.74 KB, 2026-06-27 01:52)",
+    "  \ud83d\udcc4 eval_deepset.py (6.70 KB, 2026-06-22 23:32)",
+    "  \ud83d\udcc4 eval_distilbert_deepset.py (8.23 KB, 2026-06-24 07:57)",
+    "  \ud83d\udcc4 eval_distilbert_rf_fusion.py (19.82 KB, 2026-06-24 08:18)",
+    "  \ud83d\udcc4 eval_jailbreakbench.py (10.73 KB, 2026-06-21 01:15)",
+    "  \ud83d\udcc4 eval_v10_pattern_recovery.py (11.92 KB, 2026-06-24 23:53)",
+    "  \ud83d\udcc4 eval_v11_regression.py (2.63 KB, 2026-06-26 11:40)",
+    "  \ud83d\udcc4 eval_v12_regression.py (6.31 KB, 2026-06-27 00:37)",
+    "  \ud83d\udcc4 eval_v12_spml.py (2.51 KB, 2026-06-26 16:09)",
+    "  \ud83d\udcc4 eval_v7_sbert.py (10.43 KB, 2026-06-21 01:01)",
+    "  \ud83d\udcc4 forensics_fusion_discrepancy.py (18.77 KB, 2026-06-24 08:27)",
+    "  \ud83d\udcc4 freeze_calibration.py (3.63 KB, 2026-06-26 13:27)",
+    "  \ud83d\udcc4 lof_influence_audit.py (9.10 KB, 2026-06-25 15:36)",
+    "  \ud83d\udcc4 repo_audit_helper.py (2.89 KB, 2026-06-27 18:36)",
+    "  \ud83d\udcc4 robustness_audit.py (8.00 KB, 2026-06-26 21:52)",
+    "  \ud83d\udcc4 routing_study2.py (3.15 KB, 2026-06-26 21:20)",
+    "  \ud83d\udcc4 run_ablation_study.py (7.32 KB, 2026-06-25 15:16)",
+    "  \ud83d\udcc4 test_phase2.py (0.52 KB, 2026-06-26 13:42)",
+    "  \ud83d\udcc4 test_phase3a.py (1.01 KB, 2026-06-26 13:48)",
+    "  \ud83d\udcc4 test_phase3a5.py (1.19 KB, 2026-06-26 13:58)",
+    "  \ud83d\udcc4 test_phase3b1.py (1.28 KB, 2026-06-26 14:09)",
+    "  \ud83d\udcc4 test_phase3b2.py (1.31 KB, 2026-06-26 14:28)",
+    "  \ud83d\udcc4 test_registry.py (0.66 KB, 2026-06-26 13:16)",
+    "  \ud83d\udcc4 threshold_study.py (17.14 KB, 2026-06-21 20:29)",
+    "  \ud83d\udcc4 train_distilbert_pi.py (20.85 KB, 2026-06-24 01:50)",
+    "  \ud83d\udcc4 train_semantic_router.py (5.46 KB, 2026-06-26 21:44)",
+    "  \ud83d\udcc4 validate_v9_identity.py (2.30 KB, 2026-06-23 19:41)",
+    "\ud83d\udcc1 tests/",
+    "  \ud83d\udcc1 __pycache__/",
+    "    \ud83d\udcc4 __init__.cpython-313.pyc (0.18 KB, 2026-05-13 00:50)",
+    "    \ud83d\udcc4 test_argusx.cpython-313-pytest-9.0.3.pyc (183.83 KB, 2026-05-14 17:23)",
+    "    \ud83d\udcc4 test_eval_driven_rules.cpython-313-pytest-9.0.3.pyc (104.12 KB, 2026-06-18 01:52)",
+    "    \ud83d\udcc4 test_eval_driven_rules_2.cpython-313-pytest-9.0.3.pyc (45.78 KB, 2026-06-19 00:15)",
+    "    \ud83d\udcc4 test_eval_driven_rules_3.cpython-313-pytest-9.0.3.pyc (17.82 KB, 2026-06-19 02:12)",
+    "    \ud83d\udcc4 test_pattern_recovery.cpython-313-pytest-9.0.3.pyc (33.60 KB, 2026-06-24 23:52)",
+    "  \ud83d\udcc4 __init__.py (0.02 KB, 2026-05-04 19:50)",
+    "  \ud83d\udcc4 test_argusx.py (52.52 KB, 2026-05-14 17:23)",
+    "  \ud83d\udcc4 test_eval_driven_rules.py (28.05 KB, 2026-06-18 01:52)",
+    "  \ud83d\udcc4 test_eval_driven_rules_2.py (8.77 KB, 2026-06-19 00:14)",
+    "  \ud83d\udcc4 test_pattern_recovery.py (9.97 KB, 2026-06-24 23:52)",
+    "\ud83d\udcc4 .env (1.57 KB, 2026-06-18 12:41)",
+    "\ud83d\udcc4 .env.example (4.20 KB, 2026-05-13 00:56)",
+    "\ud83d\udcc4 .gitignore (3.32 KB, 2026-06-24 23:46)",
+    "\ud83d\udcc4 ablation_results.json (3.09 KB, 2026-06-25 16:04)",
+    "\ud83d\udcc4 ablation_study_behavioral_lof.md (5.43 KB, 2026-06-25 15:22)",
+    "\ud83d\udcc4 adaptive_runtime_compatibility_audit.md (4.94 KB, 2026-06-26 00:20)",
+    "\ud83d\udcc4 argusx.db (2.19 MB, 2026-06-27 18:09)",
+    "\ud83d\udcc4 argusx_architectural_audit.md (17.27 KB, 2026-06-25 14:31)",
+    "\ud83d\udcc4 argusx_v11_architectural_consolidation_audit.md (15.89 KB, 2026-06-25 14:53)",
+    "\ud83d\udcc4 argusx_v11_integration_feasibility.md (6.75 KB, 2026-06-25 16:39)",
+    "\ud83d\udcc4 arxiv_res.xml (26.47 KB, 2026-06-24 15:08)",
+    "\ud83d\udcc4 audit_out.txt (34.24 KB, 2026-06-26 20:54)",
+    "\ud83d\udcc4 audit_output.txt (22.69 KB, 2026-06-21 02:19)",
+    "\ud83d\udcc4 behavioral_lof_repository_verification.md (4.09 KB, 2026-06-25 21:49)",
+    "\ud83d\udcc4 behavioral_rf_dependency_audit.md (5.45 KB, 2026-06-25 21:57)",
+    "\ud83d\udcc4 blind_eval_results.json (1.08 KB, 2026-06-21 01:27)",
+    "\ud83d\udcc4 blind_output.txt (38.03 KB, 2026-06-21 01:27)",
+    "\ud83d\udcc4 context_dilution_results.json (18.28 KB, 2026-06-22 23:32)",
+    "\ud83d\udcc4 cyberseceval_output.txt (14.39 KB, 2026-06-21 02:05)",
+    "\ud83d\udcc4 cyberseceval_results.json (2.07 KB, 2026-06-21 02:05)",
+    "\ud83d\udcc4 cysecbench.csv (1.47 MB, 2026-06-27 01:10)",
+    "\ud83d\udcc4 cysecbench_oracle_out.txt (51.70 KB, 2026-06-27 01:56)",
+    "\ud83d\udcc4 cysecbench_out.txt (63.28 KB, 2026-06-27 01:45)",
+    "\ud83d\udcc4 distilbert_numerical_compatibility_report.md (3.87 KB, 2026-06-25 23:32)",
+    "\ud83d\udcc4 generalization_report.md (3.31 KB, 2026-06-25 01:10)",
+    "\ud83d\udcc4 jailbreakbench_results.json (0.36 KB, 2026-06-21 01:16)",
+    "\ud83d\udcc4 jbb_output.txt (30.12 KB, 2026-06-21 01:16)",
+    "\ud83d\udcc4 LICENSE (1.05 KB, 2026-05-04 19:51)",
+    "\ud83d\udcc4 lof_influence_audit.md (4.67 KB, 2026-06-25 15:38)",
+    "\ud83d\udcc4 lof_influence_statistics.json (87.51 KB, 2026-06-25 15:58)",
+    "\ud83d\udcc4 lof_validation_metrics.json (1.59 KB, 2026-06-25 16:04)",
+    "\ud83d\udcc4 main.py (2.70 KB, 2026-05-04 19:32)",
+    "\ud83d\udcc4 phase1_code_review.md (6.93 KB, 2026-06-25 22:47)",
+    "\ud83d\udcc4 pytest.ini (0.23 KB, 2026-05-04 19:50)",
+    "\ud83d\udcc4 README.md (14.54 KB, 2026-05-04 19:51)",
+    "\ud83d\udcc4 regression_out.txt (4.31 KB, 2026-06-27 00:42)",
+    "\ud83d\udcc4 repo_tree.txt (63.95 KB, 2026-06-27 18:34)",
+    "\ud83d\udcc4 requirements.txt (0.73 KB, 2026-05-13 00:52)",
+    "\ud83d\udcc4 robustness_out.txt (11.80 KB, 2026-06-26 21:54)",
+    "\ud83d\udcc4 routing_schema_alignment.md (4.70 KB, 2026-06-26 00:44)",
+    "\ud83d\udcc4 routing_study.txt (4.06 KB, 2026-06-26 21:20)",
+    "\ud83d\udcc4 runtime_execution_trace_audit.md (5.86 KB, 2026-06-26 00:09)",
+    "\ud83d\udcc4 threat_router_correctness_audit.md (6.70 KB, 2026-06-26 00:26)",
+    "\ud83d\udcc4 threat_router_schema_verification.md (3.67 KB, 2026-06-26 00:31)",
+    "\ud83d\udcc4 threshold_study_output.txt (15.72 KB, 2026-06-21 20:32)",
+    "\ud83d\udcc4 threshold_study_results.json (6.60 KB, 2026-06-21 20:46)",
+    "\ud83d\udcc4 tree_output.txt (9.19 KB, 2026-06-26 02:06)",
+    "\ud83d\udcc4 v10_pattern_recovery_report.md (3.49 KB, 2026-06-24 23:56)",
+    "\ud83d\udcc4 v11_routing_schema_audit.md (4.88 KB, 2026-06-26 01:20)",
+    "\ud83d\udcc4 v11_routing_verification.md (3.07 KB, 2026-06-26 01:03)",
+    "\ud83d\udcc4 v11_runtime_activation.md (2.24 KB, 2026-06-26 01:33)",
+    "\ud83d\udcc4 v7_sbert_output.txt (15.24 KB, 2026-06-21 01:03)",
+    "\ud83d\udcc4 v7_sbert_results.json (1.18 KB, 2026-06-21 01:03)"
+  ],
+  "stats": {
+    "total_folders": 54,
+    "total_files": 286,
+    "total_size_bytes": 575995352,
+    "ext_counts": {
+      "": 7,
+      ".tag": 1,
+      ".md": 21,
+      ".pyc": 47,
+      ".py": 85,
+      ".pkl": 13,
+      ".csv": 18,
+      ".json": 62,
+      ".yml": 1,
+      ".png": 4,
+      ".safetensors": 2,
+      ".txt": 21,
+      ".example": 1,
+      ".db": 1,
+      ".xml": 1,
+      ".ini": 1
+    }
+  },
+  "large_files": [
+    {
+      "path": "data/pi_corpus/train.csv",
+      "size": 7922510
+    },
+    {
+      "path": "models/distilbert_pi/model.safetensors",
+      "size": 267832560
+    },
+    {
+      "path": "models/distilbert_pi_augmented/model.safetensors",
+      "size": 267832560
+    },
+    {
+      "path": "models/router_vec_C.pkl",
+      "size": 7020199
+    },
+    {
+      "path": "models/router_vec_D.pkl",
+      "size": 8589570
+    }
+  ],
+  "model_files": [
+    {
+      "path": "app/models/artifacts/anomaly_detector.pkl",
+      "size": 244,
+      "name": "anomaly_detector.pkl"
+    },
+    {
+      "path": "app/models/artifacts/behavioral_model.pkl",
+      "size": 508617,
+      "name": "behavioral_model.pkl"
+    },
+    {
+      "path": "app/models/artifacts/platt_db.pkl",
+      "size": 879,
+      "name": "platt_db.pkl"
+    },
+    {
+      "path": "app/models/artifacts/platt_rf.pkl",
+      "size": 879,
+      "name": "platt_rf.pkl"
+    },
+    {
+      "path": "app/models/artifacts/vectorizer.pkl",
+      "size": 181998,
+      "name": "vectorizer.pkl"
+    },
+    {
+      "path": "models/router_classifier.pkl",
+      "size": 122749,
+      "name": "router_classifier.pkl"
+    },
+    {
+      "path": "models/router_clf_B.pkl",
+      "size": 120549,
+      "name": "router_clf_B.pkl"
+    },
+    {
+      "path": "models/router_clf_C.pkl",
+      "size": 1951985,
+      "name": "router_clf_C.pkl"
+    },
+    {
+      "path": "models/router_clf_D.pkl",
+      "size": 2234577,
+      "name": "router_clf_D.pkl"
+    },
+    {
+      "path": "models/router_vec_B.pkl",
+      "size": 329216,
+      "name": "router_vec_B.pkl"
+    },
+    {
+      "path": "models/router_vec_C.pkl",
+      "size": 7020199,
+      "name": "router_vec_C.pkl"
+    },
+    {
+      "path": "models/router_vec_D.pkl",
+      "size": 8589570,
+      "name": "router_vec_D.pkl"
+    },
+    {
+      "path": "models/router_vectorizer.pkl",
+      "size": 334396,
+      "name": "router_vectorizer.pkl"
+    }
+  ],
+  "eval_files": [
+    {
+      "path": "data/pi_augmentation/context_dilution.csv",
+      "name": "context_dilution.csv"
+    },
+    {
+      "path": "data/pi_augmentation/cross_lingual_benign.csv",
+      "name": "cross_lingual_benign.csv"
+    },
+    {
+      "path": "data/pi_augmentation/translation_bypass.csv",
+      "name": "translation_bypass.csv"
+    },
+    {
+      "path": "data/pi_corpus/test.csv",
+      "name": "test.csv"
+    },
+    {
+      "path": "data/pi_corpus/train.csv",
+      "name": "train.csv"
+    },
+    {
+      "path": "data/pi_corpus/val.csv",
+      "name": "val.csv"
+    },
+    {
+      "path": "evaluation/results/eval_metrics_20260618_012643.csv",
+      "name": "eval_metrics_20260618_012643.csv"
+    },
+    {
+      "path": "evaluation/results/eval_metrics_20260618_013944.csv",
+      "name": "eval_metrics_20260618_013944.csv"
+    },
+    {
+      "path": "evaluation/results/eval_metrics_20260618_124450.csv",
+      "name": "eval_metrics_20260618_124450.csv"
+    },
+    {
+      "path": "evaluation/results/eval_metrics_20260619_001644.csv",
+      "name": "eval_metrics_20260619_001644.csv"
+    },
+    {
+      "path": "evaluation/results/eval_metrics_20260619_021316.csv",
+      "name": "eval_metrics_20260619_021316.csv"
+    },
+    {
+      "path": "evaluation/results/eval_report_20260618_012643.json",
+      "name": "eval_report_20260618_012643.json"
+    },
+    {
+      "path": "evaluation/results/eval_report_20260618_013944.json",
+      "name": "eval_report_20260618_013944.json"
+    },
+    {
+      "path": "evaluation/results/eval_report_20260618_124450.json",
+      "name": "eval_report_20260618_124450.json"
+    },
+    {
+      "path": "evaluation/results/eval_report_20260619_001644.json",
+      "name": "eval_report_20260619_001644.json"
+    },
+    {
+      "path": "evaluation/results/eval_report_20260619_021316.json",
+      "name": "eval_report_20260619_021316.json"
+    },
+    {
+      "path": "evaluation/results/eval_results_20260618_012643.csv",
+      "name": "eval_results_20260618_012643.csv"
+    },
+    {
+      "path": "evaluation/results/eval_results_20260618_013944.csv",
+      "name": "eval_results_20260618_013944.csv"
+    },
+    {
+      "path": "evaluation/results/eval_results_20260618_124450.csv",
+      "name": "eval_results_20260618_124450.csv"
+    },
+    {
+      "path": "evaluation/results/eval_results_20260619_001644.csv",
+      "name": "eval_results_20260619_001644.csv"
+    },
+    {
+      "path": "evaluation/results/eval_results_20260619_021316.csv",
+      "name": "eval_results_20260619_021316.csv"
+    },
+    {
+      "path": "evaluation/run_evaluation.py",
+      "name": "run_evaluation.py"
+    },
+    {
+      "path": "results/v10_generalization/per_sample.csv",
+      "name": "per_sample.csv"
+    },
+    {
+      "path": "scripts/__pycache__/eval_v10_pattern_recovery.cpython-313.pyc",
+      "name": "eval_v10_pattern_recovery.cpython-313.pyc"
+    },
+    {
+      "path": "scripts/audit_cyberseceval.py",
+      "name": "audit_cyberseceval.py"
+    },
+    {
+      "path": "scripts/eval_blind_benchmark.py",
+      "name": "eval_blind_benchmark.py"
+    },
+    {
+      "path": "scripts/eval_calibrated_fusion.py",
+      "name": "eval_calibrated_fusion.py"
+    },
+    {
+      "path": "scripts/eval_context_dilution.py",
+      "name": "eval_context_dilution.py"
+    },
+    {
+      "path": "scripts/eval_cyberseceval.py",
+      "name": "eval_cyberseceval.py"
+    },
+    {
+      "path": "scripts/eval_cysecbench.py",
+      "name": "eval_cysecbench.py"
+    },
+    {
+      "path": "scripts/eval_cysecbench_oracle.py",
+      "name": "eval_cysecbench_oracle.py"
+    },
+    {
+      "path": "scripts/eval_deepset.py",
+      "name": "eval_deepset.py"
+    },
+    {
+      "path": "scripts/eval_distilbert_deepset.py",
+      "name": "eval_distilbert_deepset.py"
+    },
+    {
+      "path": "scripts/eval_distilbert_rf_fusion.py",
+      "name": "eval_distilbert_rf_fusion.py"
+    },
+    {
+      "path": "scripts/eval_jailbreakbench.py",
+      "name": "eval_jailbreakbench.py"
+    },
+    {
+      "path": "scripts/eval_v10_pattern_recovery.py",
+      "name": "eval_v10_pattern_recovery.py"
+    },
+    {
+      "path": "scripts/eval_v11_regression.py",
+      "name": "eval_v11_regression.py"
+    },
+    {
+      "path": "scripts/eval_v12_regression.py",
+      "name": "eval_v12_regression.py"
+    },
+    {
+      "path": "scripts/eval_v12_spml.py",
+      "name": "eval_v12_spml.py"
+    },
+    {
+      "path": "scripts/eval_v7_sbert.py",
+      "name": "eval_v7_sbert.py"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules_2.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules_2.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules_3.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules_3.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/test_eval_driven_rules.py",
+      "name": "test_eval_driven_rules.py"
+    },
+    {
+      "path": "tests/test_eval_driven_rules_2.py",
+      "name": "test_eval_driven_rules_2.py"
+    },
+    {
+      "path": "audit_output.txt",
+      "name": "audit_output.txt"
+    },
+    {
+      "path": "blind_eval_results.json",
+      "name": "blind_eval_results.json"
+    },
+    {
+      "path": "blind_output.txt",
+      "name": "blind_output.txt"
+    },
+    {
+      "path": "cyberseceval_output.txt",
+      "name": "cyberseceval_output.txt"
+    },
+    {
+      "path": "cyberseceval_results.json",
+      "name": "cyberseceval_results.json"
+    },
+    {
+      "path": "jbb_output.txt",
+      "name": "jbb_output.txt"
+    },
+    {
+      "path": "threshold_study_output.txt",
+      "name": "threshold_study_output.txt"
+    },
+    {
+      "path": "tree_output.txt",
+      "name": "tree_output.txt"
+    },
+    {
+      "path": "v7_sbert_output.txt",
+      "name": "v7_sbert_output.txt"
+    }
+  ],
+  "temp_files": [
+    {
+      "path": "scripts/routing_study2.py",
+      "name": "routing_study2.py"
+    },
+    {
+      "path": "scripts/run_ablation_study.py",
+      "name": "run_ablation_study.py"
+    },
+    {
+      "path": "scripts/test_phase2.py",
+      "name": "test_phase2.py"
+    },
+    {
+      "path": "scripts/test_phase3a.py",
+      "name": "test_phase3a.py"
+    },
+    {
+      "path": "scripts/test_phase3a5.py",
+      "name": "test_phase3a5.py"
+    },
+    {
+      "path": "scripts/test_phase3b1.py",
+      "name": "test_phase3b1.py"
+    },
+    {
+      "path": "scripts/test_phase3b2.py",
+      "name": "test_phase3b2.py"
+    },
+    {
+      "path": "scripts/test_registry.py",
+      "name": "test_registry.py"
+    },
+    {
+      "path": "scripts/threshold_study.py",
+      "name": "threshold_study.py"
+    },
+    {
+      "path": "tests/__pycache__/test_argusx.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_argusx.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules_2.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules_2.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_eval_driven_rules_3.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_eval_driven_rules_3.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/__pycache__/test_pattern_recovery.cpython-313-pytest-9.0.3.pyc",
+      "name": "test_pattern_recovery.cpython-313-pytest-9.0.3.pyc"
+    },
+    {
+      "path": "tests/test_argusx.py",
+      "name": "test_argusx.py"
+    },
+    {
+      "path": "tests/test_eval_driven_rules.py",
+      "name": "test_eval_driven_rules.py"
+    },
+    {
+      "path": "tests/test_eval_driven_rules_2.py",
+      "name": "test_eval_driven_rules_2.py"
+    },
+    {
+      "path": "tests/test_pattern_recovery.py",
+      "name": "test_pattern_recovery.py"
+    },
+    {
+      "path": "ablation_study_behavioral_lof.md",
+      "name": "ablation_study_behavioral_lof.md"
+    },
+    {
+      "path": "routing_study.txt",
+      "name": "routing_study.txt"
+    },
+    {
+      "path": "threshold_study_output.txt",
+      "name": "threshold_study_output.txt"
+    },
+    {
+      "path": "threshold_study_results.json",
+      "name": "threshold_study_results.json"
+    }
+  ],
+  "cache_dirs": [
+    ".pytest_cache",
+    "__pycache__",
+    "app/__pycache__",
+    "app/api/__pycache__",
+    "app/api/endpoints/__pycache__",
+    "app/core/__pycache__",
+    "app/detection/__pycache__",
+    "app/models/__pycache__",
+    "app/output_scrutiny/__pycache__",
+    "app/routing/__pycache__",
+    "app/services/__pycache__",
+    "app/utils/__pycache__",
+    "scripts/__pycache__",
+    "tests/__pycache__"
+  ],
+  "docs": [
+    {
+      "path": ".pytest_cache/README.md",
+      "name": "README.md"
+    },
+    {
+      "path": "adaptive_runtime_compatibility_audit.md",
+      "name": "adaptive_runtime_compatibility_audit.md"
+    },
+    {
+      "path": "argusx_architectural_audit.md",
+      "name": "argusx_architectural_audit.md"
+    },
+    {
+      "path": "argusx_v11_architectural_consolidation_audit.md",
+      "name": "argusx_v11_architectural_consolidation_audit.md"
+    },
+    {
+      "path": "audit_out.txt",
+      "name": "audit_out.txt"
+    },
+    {
+      "path": "audit_output.txt",
+      "name": "audit_output.txt"
+    },
+    {
+      "path": "behavioral_rf_dependency_audit.md",
+      "name": "behavioral_rf_dependency_audit.md"
+    },
+    {
+      "path": "lof_influence_audit.md",
+      "name": "lof_influence_audit.md"
+    },
+    {
+      "path": "README.md",
+      "name": "README.md"
+    },
+    {
+      "path": "runtime_execution_trace_audit.md",
+      "name": "runtime_execution_trace_audit.md"
+    },
+    {
+      "path": "threat_router_correctness_audit.md",
+      "name": "threat_router_correctness_audit.md"
+    },
+    {
+      "path": "v11_routing_schema_audit.md",
+      "name": "v11_routing_schema_audit.md"
+    }
+  ]
+}

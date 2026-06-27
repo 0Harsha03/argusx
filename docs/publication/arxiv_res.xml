@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/w6sDliXFaXq0IhjI4pPpkni2KSs</id>
+  <title>arXiv Query: search_query=all:dual-stage AND all:prompt AND all:injection&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-06-24T09:38:04Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:dual-stage+AND+(all:prompt+AND+all:injection)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>18</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2605.18023v2</id>
+    <title>DSAA: Dual-Stage Attribute Activation for Fine-grained Open Vocabulary Detection</title>
+    <updated>2026-05-29T15:54:11Z</updated>
+    <link href="https://arxiv.org/abs/2605.18023v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.18023v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Open-Vocabulary Object Detection (OVD) models break the limitations of closed-set detection, enabling the identification of unseen categories through natural language prompts. However, they exhibit notable limitations in fine-grained detection tasks involving attributes like color, material, and texture. We attribute this performance bottleneck in OVD models to a core issue: when category signals dominate, OVD models tend to marginalize attribute information during inference. This leads to incorrect binding between attributes and target objects. To address this, we propose the Dual-Stage Attribute Activation (DSAA) framework, which enhances fine-grained detection capabilities by strengthening attribute semantics at two critical stages. In the text embedding stage, we employ Attribute Prefix Adapter (APA) module to generate attribute prefixes that inject explicit attribute priors. To further amplify the influence of these attributes, our Key/Value (K/V) Modulator module then intervenes during the BERT encoding phase, selectively enhancing the Key and Value vectors of the corresponding attribute tokens. In addition, we introduce an attribute-aware contrastive loss to improve discrimination among same-category instances with different attributes during training. Experimental results on the FG-OVD benchmark demonstrate the effectiveness of our method across various mainstream open-vocabulary models.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-18T08:13:13Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Donghong Jiang</name>
+    </author>
+    <author>
+      <name>Endian Lin</name>
+    </author>
+    <author>
+      <name>Hanqing Liu</name>
+    </author>
+    <author>
+      <name>Mingjie Liu</name>
+    </author>
+    <author>
+      <name>Luoping Cui</name>
+    </author>
+    <author>
+      <name>Zhao Yang</name>
+    </author>
+    <author>
+      <name>Chuang Zhu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.01449v1</id>
+    <title>VisInject: Disruption != Injection -- A Dual-Dimension Evaluation of Universal Adversarial Attacks on Vision-Language Models</title>
+    <updated>2026-05-02T13:56:50Z</updated>
+    <link href="https://arxiv.org/abs/2605.01449v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.01449v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Universal adversarial attacks on aligned multimodal large language models are increasingly reported with attack success rates in the 60-80% range, suggesting the visual modality is highly vulnerable to imperceptible perturbations as a prompt-injection channel. We argue that this number conflates two distinct events: (i) the model's output was perturbed (Influence), and (ii) the attacker's chosen target concept was actually emitted (Precise Injection). We compose two existing techniques -- Universal Adversarial Attack and AnyAttack -- under an $L_{inf}$ budget of 16/255, and we add a dual-axis evaluation: a deterministic Ratcliff-Obershelp drift score for Influence (programmatic baseline) plus a 4-tier ordinal categorical none/weak/partial/confirmed for Precise Injection. The judge is DeepSeek-V4-Pro in thinking mode, calibrated against Claude Opus 4.7 with Cohen's $κ$ = 0.77 on the injection axis (substantial agreement); the entire 4475-entry SHA-256 input cache ships with the dataset so reviewers can re-derive paper numbers bit-exact without an API key. Across 6615 pairs over four open VLMs, seven attack prompts, and seven test images, the two axes diverge by roughly 90$\times$: 66.4% of pairs are programmatically disturbed (LLM-judged 46.6% at the substantial-or-complete tier), but only 0.756% (50/6615) reach any non-none injection tier and only 0.030% (2/6615) verbatim. The few injections that do land cluster on screenshot- or document-style carriers whose semantics already invite text transcription. BLIP-2 shows \emph{zero detectable drift} at $L_{inf}$ = 16/255 across all 2205 pairs even when used as a Stage-1 surrogate. We release the full dataset -- 21 universal images, 147 adversarial photos, 6,615 response pairs, the v3 dual-axis judge results, and the cache at huggingface.co/datasets/jeffliulab/visinject.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-02T13:56:50Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Pang Liu</name>
+    </author>
+    <author>
+      <name>Yingjie Lao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2312.00360v2</id>
+    <title>Efficient Multimodal Semantic Segmentation via Dual-Prompt Learning</title>
+    <updated>2023-12-04T04:38:17Z</updated>
+    <link href="https://arxiv.org/abs/2312.00360v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.00360v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal (e.g., RGB-Depth/RGB-Thermal) fusion has shown great potential for improving semantic segmentation in complex scenes (e.g., indoor/low-light conditions). Existing approaches often fully fine-tune a dual-branch encoder-decoder framework with a complicated feature fusion strategy for achieving multimodal semantic segmentation, which is training-costly due to the massive parameter updates in feature extraction and fusion. To address this issue, we propose a surprisingly simple yet effective dual-prompt learning network (dubbed DPLNet) for training-efficient multimodal (e.g., RGB-D/T) semantic segmentation. The core of DPLNet is to directly adapt a frozen pre-trained RGB model to multimodal semantic segmentation, reducing parameter updates. For this purpose, we present two prompt learning modules, comprising multimodal prompt generator (MPG) and multimodal feature adapter (MFA). MPG works to fuse the features from different modalities in a compact manner and is inserted from shadow to deep stages to generate the multi-level multimodal prompts that are injected into the frozen backbone, while MPG adapts prompted multimodal features in the frozen backbone for better multimodal semantic segmentation. Since both the MPG and MFA are lightweight, only a few trainable parameters (3.88M, 4.4% of the pre-trained backbone parameters) are introduced for multimodal feature fusion and learning. Using a simple decoder (3.27M parameters), DPLNet achieves new state-of-the-art performance or is on a par with other complex approaches on four RGB-D/T semantic segmentation datasets while satisfying parameter efficiency. Moreover, we show that DPLNet is general and applicable to other multimodal tasks such as salient object detection and video semantic segmentation. Without special design, DPLNet outperforms many complicated models. Our code will be available at github.com/ShaohuaDong2021/DPLNet.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-01T05:50:44Z</published>
+    <arxiv:comment>11 pages, 4 figures, 9 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Shaohua Dong</name>
+    </author>
+    <author>
+      <name>Yunhe Feng</name>
+    </author>
+    <author>
+      <name>Qing Yang</name>
+    </author>
+    <author>
+      <name>Yan Huang</name>
+    </author>
+    <author>
+      <name>Dongfang Liu</name>
+    </author>
+    <author>
+      <name>Heng Fan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.04364v1</id>
+    <title>Dual-Modality Multi-Stage Adversarial Safety Training: Robustifying Multimodal Web Agents Against Cross-Modal Attacks</title>
+    <updated>2026-03-04T18:29:54Z</updated>
+    <link href="https://arxiv.org/abs/2603.04364v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.04364v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal web agents that process both screenshots and accessibility trees are increasingly deployed to interact with web interfaces, yet their dual-stream architecture opens an underexplored attack surface: an adversary who injects content into the webpage DOM simultaneously corrupts both observation channels with a consistent deceptive narrative. Our vulnerability analysis on MiniWob++ reveals that attacks including a visual component far outperform text-only injections, exposing critical gaps in text-centric VLM safety training. Motivated by this finding, we propose Dual-Modality Multi-Stage Adversarial Safety Training (DMAST), a framework that formalizes the agent-attacker interaction as a two-player zero-sum Markov game and co-trains both players through a three-stage pipeline: (1) imitation learning from a strong teacher model, (2) oracle-guided supervised fine-tuning that uses a novel zero-acknowledgment strategy to instill task-focused reasoning under adversarial noise, and (3) adversarial reinforcement learning via Group Relative Policy Optimization (GRPO) self-play. On out-of-distribution tasks, DMAST substantially mitigates adversarial risks while simultaneously doubling task completion efficiency. Our approach significantly outperforms established training-based and prompt-based defenses, demonstrating genuine co-evolutionary progress and robust generalization to complex, unseen environments.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-04T18:29:54Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Haoyu Liu</name>
+    </author>
+    <author>
+      <name>Dingcheng Li</name>
+    </author>
+    <author>
+      <name>Lukas Rutishauser</name>
+    </author>
+    <author>
+      <name>Zeyu Zheng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.02331v2</id>
+    <title>VAEmo: Efficient Representation Learning for Visual-Audio Emotion with Knowledge Injection</title>
+    <updated>2025-08-02T22:04:23Z</updated>
+    <link href="https://arxiv.org/abs/2505.02331v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.02331v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Audiovisual emotion recognition (AVER) aims to infer human emotions from nonverbal visual-audio (VA) cues, offering modality-complementary and language-agnostic advantages. However, AVER remains challenging due to the inherent ambiguity of emotional expressions, cross-modal expressive disparities, and the scarcity of reliably annotated data. Recent self-supervised AVER approaches have introduced strong multimodal representations, yet they predominantly rely on modality-specific encoders and coarse content-level alignment, limiting fine-grained emotional semantic modeling. To address these issues, we propose VAEmo, an efficient two-stage framework for emotion-centric joint VA representation learning with external knowledge injection. In Stage~1, a unified and lightweight representation network is pre-trained on large-scale speaker-centric VA corpora via masked reconstruction and contrastive objectives, mitigating the modality gap and learning expressive, complementary representations without emotion labels. In Stage~2, multimodal large language models automatically generate detailed affective descriptions according to our well-designed chain-of-thought prompting for only a small subset of VA samples; these rich textual semantics are then injected by aligning their corresponding embeddings with VA representations through dual-path contrastive learning, further bridging the emotion gap. Extensive experiments on multiple downstream AVER benchmarks show that VAEmo achieves state-of-the-art performance with a compact design, highlighting the benefit of unified cross-modal encoding and emotion-aware semantic guidance for efficient, generalizable VA emotion representations.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SD" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-05T03:00:51Z</published>
+    <arxiv:comment>Source code and pre-trained models will be available at https://github.com/MSA-LMC/VAEmo</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hao Cheng</name>
+    </author>
+    <author>
+      <name>Zhiwei Zhao</name>
+    </author>
+    <author>
+      <name>Yichao He</name>
+    </author>
+    <author>
+      <name>Zhenzhen Hu</name>
+    </author>
+    <author>
+      <name>Jia Li</name>
+    </author>
+    <author>
+      <name>Meng Wang</name>
+    </author>
+    <author>
+      <name>Richang Hong</name>
+    </author>
+    <arxiv:doi>10.1145/3746027.3754924</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3746027.3754924" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.06092v1</id>
+    <title>Boosting Self-Supervised Tracking with Contextual Prompts and Noise Learning</title>
+    <updated>2026-05-07T12:12:28Z</updated>
+    <link href="https://arxiv.org/abs/2605.06092v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.06092v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Learning robust contextual knowledge from unlabeled videos is essential for advancing self-supervised tracking. However, conventional self-supervised trackers lack effective context modeling, while existing context association methods based on non-semantic queries struggle to adapt to unlabeled tracking scenarios, making it difficult to learn reliable contextual cues. In this work, we propose a novel self-supervised tracking framework, named \textbf{\tracker}, which introduces a dual-modal context association mechanism that jointly leverages fine-grained semantic prompts and contextual noise to drive the model toward learning robust tracking representations. Adherent to the easy-to-hard learning principle, our contextual association mechanism operates based on two stages. During early training, instance patch tokens (prompts) are assigned to both forward and backward tracking branches to facilitate the acquisition of tracking knowledge. As training progresses, contextual noise is gradually injected into the model to perturb feature, encouraging the tracker to learn robust tracking representations in a more complex feature space. Thus, this novel contextual association mechanism enables our self-supervised model to learn high-quality tracking representations from unlabeled videos, while being applied exclusively during training to preserve efficient inference. Extensive experiments demonstrate the superiority of our method.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-07T12:12:28Z</published>
+    <arxiv:comment>CVPR 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yaozong Zheng</name>
+    </author>
+    <author>
+      <name>Qihua Liang</name>
+    </author>
+    <author>
+      <name>Bineng Zhong</name>
+    </author>
+    <author>
+      <name>Shuimu Zeng</name>
+    </author>
+    <author>
+      <name>Yuanliang Xue</name>
+    </author>
+    <author>
+      <name>Ning Li</name>
+    </author>
+    <author>
+      <name>Shuxiang Song</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2311.11860v2</id>
+    <title>LION : Empowering Multimodal Large Language Model with Dual-Level Visual Knowledge</title>
+    <updated>2023-11-26T10:10:55Z</updated>
+    <link href="https://arxiv.org/abs/2311.11860v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2311.11860v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal Large Language Models (MLLMs) have endowed LLMs with the ability to perceive and understand multi-modal signals. However, most of the existing MLLMs mainly adopt vision encoders pretrained on coarsely aligned image-text pairs, leading to insufficient extraction and reasoning of visual knowledge. To address this issue, we devise a dual-Level vIsual knOwledge eNhanced Multimodal Large Language Model (LION), which empowers the MLLM by injecting visual knowledge in two levels. 1) Progressive incorporation of fine-grained spatial-aware visual knowledge. We design a vision aggregator cooperated with region-level vision-language (VL) tasks to incorporate fine-grained spatial-aware visual knowledge into the MLLM. To alleviate the conflict between image-level and region-level VL tasks during incorporation, we devise a dedicated stage-wise instruction-tuning strategy with mixture-of-adapters. This progressive incorporation scheme contributes to the mutual promotion between these two kinds of VL tasks. 2) Soft prompting of high-level semantic visual evidence. We facilitate the MLLM with high-level semantic visual evidence by leveraging diverse image tags. To mitigate the potential influence caused by imperfect predicted tags, we propose a soft prompting method by embedding a learnable token into the tailored text instruction. Comprehensive experiments on several multi-modal benchmarks demonstrate the superiority of our model (e.g., improvement of 5% accuracy on VSR and 3% CIDEr on TextCaps over InstructBLIP, 5% accuracy on RefCOCOg over Kosmos-2).</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-11-20T15:56:44Z</published>
+    <arxiv:comment>Technical Report. Project page: https://rshaojimmy.github.io/Projects/JiuTian-LION Code: https://github.com/rshaojimmy/JiuTian</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Gongwei Chen</name>
+    </author>
+    <author>
+      <name>Leyang Shen</name>
+    </author>
+    <author>
+      <name>Rui Shao</name>
+    </author>
+    <author>
+      <name>Xiang Deng</name>
+    </author>
+    <author>
+      <name>Liqiang Nie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.05611v2</id>
+    <title>X-Voice: Enabling Everyone to Speak 30 Languages via Zero-Shot Cross-Lingual Voice Cloning</title>
+    <updated>2026-05-09T04:00:12Z</updated>
+    <link href="https://arxiv.org/abs/2605.05611v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.05611v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we present X-Voice, a 0.4B multilingual zero-shot voice cloning model that clones arbitrary voices and enables everyone to speak 30 languages. X-Voice is trained on a 420K-hour multilingual corpus using the International Phonetic Alphabet (IPA) as a unified representation. To eliminate the reliance on prompt text without complex preprocessing like forced alignment, we design a two-stage training paradigm. In Stage 1, we establish X-Voice$_{\text{s1}}$ through standard conditional flow-matching training and use it to synthesize 10K hours of speaker-consistent segments as audio prompts. In Stage 2, we fine-tune on these audio pairs with prompt text masked to derive X-Voice$_{\text{s2}}$, which enables zero-shot voice cloning without requiring transcripts of audio prompts. Architecturally, we extend F5-TTS by implementing a dual-level injection of language identifiers and decoupling and scheduling of Classifier-Free Guidance to facilitate multilingual speech synthesis. Subjective and objective evaluation results demonstrate that X-Voice outperforms existing flow-matching based multilingual systems like LEMAS-TTS and achieves zero-shot cross-lingual cloning capabilities comparable to billion-scale models such as Qwen3-TTS. To facilitate research transparency and community advancement, we open-source all related resources.</summary>
+    <category term="cs.SD" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.AS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-07T02:57:53Z</published>
+    <arxiv:comment>16 pages, 4 figures, 9 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.SD"/>
+    <author>
+      <name>Rixi Xu</name>
+    </author>
+    <author>
+      <name>Qingyu Liu</name>
+    </author>
+    <author>
+      <name>Haitao Li</name>
+    </author>
+    <author>
+      <name>Yushen Chen</name>
+    </author>
+    <author>
+      <name>Zhikang Niu</name>
+    </author>
+    <author>
+      <name>Yunting Yang</name>
+    </author>
+    <author>
+      <name>Jian Zhao</name>
+    </author>
+    <author>
+      <name>Ke Li</name>
+    </author>
+    <author>
+      <name>Berrak Sisman</name>
+    </author>
+    <author>
+      <name>Qinyuan Cheng</name>
+    </author>
+    <author>
+      <name>Xipeng Qiu</name>
+    </author>
+    <author>
+      <name>Kai Yu</name>
+    </author>
+    <author>
+      <name>Xie Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.17062v1</id>
+    <title>SSG-Dit: A Spatial Signal Guided Framework for Controllable Video Generation</title>
+    <updated>2025-08-23T15:30:17Z</updated>
+    <link href="https://arxiv.org/abs/2508.17062v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.17062v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Controllable video generation aims to synthesize video content that aligns precisely with user-provided conditions, such as text descriptions and initial images. However, a significant challenge persists in this domain: existing models often struggle to maintain strong semantic consistency, frequently generating videos that deviate from the nuanced details specified in the prompts. To address this issue, we propose SSG-DiT (Spatial Signal Guided Diffusion Transformer), a novel and efficient framework for high-fidelity controllable video generation. Our approach introduces a decoupled two-stage process. The first stage, Spatial Signal Prompting, generates a spatially aware visual prompt by leveraging the rich internal representations of a pre-trained multi-modal model. This prompt, combined with the original text, forms a joint condition that is then injected into a frozen video DiT backbone via our lightweight and parameter-efficient SSG-Adapter. This unique design, featuring a dual-branch attention mechanism, allows the model to simultaneously harness its powerful generative priors while being precisely steered by external spatial signals. Extensive experiments demonstrate that SSG-DiT achieves state-of-the-art performance, outperforming existing models on multiple key metrics in the VBench benchmark, particularly in spatial relationship control and overall consistency.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-23T15:30:17Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Peng Hu</name>
+    </author>
+    <author>
+      <name>Yu Gu</name>
+    </author>
+    <author>
+      <name>Liang Luo</name>
+    </author>
+    <author>
+      <name>Fuji Ren</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.05286v1</id>
+    <title>Reflective Personalization Optimization: A Post-hoc Rewriting Framework for Black-Box Large Language Models</title>
+    <updated>2025-11-07T14:48:49Z</updated>
+    <link href="https://arxiv.org/abs/2511.05286v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.05286v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The personalization of black-box large language models (LLMs) is a critical yet challenging task. Existing approaches predominantly rely on context injection, where user history is embedded into the prompt to directly guide the generation process. However, this single-step paradigm imposes a dual burden on the model: generating accurate content while simultaneously aligning with user-specific styles. This often results in a trade-off that compromises output quality and limits precise control. To address this fundamental tension, we propose Reflective Personalization Optimization (RPO), a novel framework that redefines the personalization paradigm by decoupling content generation from alignment. RPO operates in two distinct stages: first, a base model generates a high-quality, generic response; then, an external reflection module explicitly rewrites this output to align with the user's preferences. This reflection module is trained using a two-stage process. Initially, supervised fine-tuning is employed on structured rewriting trajectories to establish a core personalized reasoning policy that models the transformation from generic to user-aligned responses. Subsequently, reinforcement learning is applied to further refine and enhance the quality of the personalized outputs. Comprehensive experiments on the LaMP benchmark demonstrate that RPO, by decoupling content generation from personalization, significantly outperforms state-of-the-art baselines. These findings underscore the superiority of explicit response shaping over implicit context injection. Moreover, RPO introduces an efficient, model-agnostic personalization layer that can be seamlessly integrated with any underlying base model, paving the way for a new and effective direction in user-centric generation scenarios.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-07T14:48:49Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Teqi Hao</name>
+    </author>
+    <author>
+      <name>Xioayu Tan</name>
+    </author>
+    <author>
+      <name>Shaojie Shi</name>
+    </author>
+    <author>
+      <name>Yinghui Xu</name>
+    </author>
+    <author>
+      <name>Xihe Qiu</name>
+    </author>
+  </entry>
+</feed>

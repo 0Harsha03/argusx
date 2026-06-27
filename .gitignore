@@ -83,3 +83,22 @@ credentials.json
 # ─── Evaluation Artifacts ─────────────────────────────────────────────────────
 evaluation/results/*.json
 evaluation/results/*.png
+
+# ==========================
+# Trained models
+# ==========================
+
+models/distilbert_pi/
+models/distilbert_pi_augmented/
+models/distilbert_sst2_pi/
+
+models/router_classifier.pkl
+models/router_vectorizer.pkl
+
+models/router_clf_B.pkl
+models/router_clf_C.pkl
+models/router_clf_D.pkl
+
+models/router_vec_B.pkl
+models/router_vec_C.pkl
+models/router_vec_D.pkl
