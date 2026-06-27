@@ -45,6 +45,8 @@ class ModelRegistry:
         self.distilbert_model = None
         self.platt_db         = None
         self.platt_rf         = None
+        self.router_vectorizer = None
+        self.router_classifier = None
         self._loaded          = False
 
     @property
@@ -58,7 +60,9 @@ class ModelRegistry:
                 self.sbert_model,
                 self.distilbert_model,
                 self.platt_db,
-                self.platt_rf
+                self.platt_rf,
+                self.router_vectorizer,
+                self.router_classifier
             )
         )
 
@@ -73,6 +77,10 @@ class ModelRegistry:
         self.platt_db         = self._load_pickle(settings.PLATT_DB_PATH, "platt_db")
         self.platt_rf         = self._load_pickle(settings.PLATT_RF_PATH, "platt_rf")
         
+        # Load semantic router models
+        self.router_vectorizer = self._load_pickle("models/router_vec_D.pkl", "router_vectorizer")
+        self.router_classifier = self._load_pickle("models/router_clf_D.pkl", "router_classifier")
+        
         self._load_sbert()
         self._load_distilbert()
 
@@ -85,6 +93,11 @@ class ModelRegistry:
             raise RuntimeError(
                 "Calibration models failed to load. "
                 "ArgusX cannot start without Platt scaling artifacts."
+            )
+        if self.router_vectorizer is None or self.router_classifier is None:
+            raise RuntimeError(
+                "Semantic router models failed to load. "
+                "ArgusX cannot start without the semantic router."
             )
         if self.sbert_model is None or self.distilbert_model is None:
             raise RuntimeError(
@@ -103,6 +116,7 @@ class ModelRegistry:
             type(self.distilbert_model).__name__,
             type(self.platt_db).__name__,
             type(self.platt_rf).__name__,
+            type(self.router_classifier).__name__,
         )
 
     def _load_pickle(self, path: str, name: str):
@@ -169,4 +183,6 @@ class ModelRegistry:
             "distilbert_model": self.distilbert_model is not None,
             "platt_db":         self.platt_db is not None,
             "platt_rf":         self.platt_rf is not None,
+            "router_vectorizer": self.router_vectorizer is not None,
+            "router_classifier": self.router_classifier is not None,
         }

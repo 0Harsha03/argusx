@@ -28,7 +28,7 @@ Invariant:
 from __future__ import annotations
 
 import logging
-from typing import List, NamedTuple, Optional
+from typing import List, NamedTuple, Optional, Tuple
 
 from app.routing.base_route import BaseRoute, RouteResult
 from app.routing.prompt_injection_route import PromptInjectionRoute
@@ -73,7 +73,10 @@ class ThreatRouter:
         route_result = decision.route_result
     """
 
-    def __init__(self, behavioral_model, vectorizer, anomaly_detector, platt_db=None, platt_rf=None) -> None:
+    def __init__(self, behavioral_model, vectorizer, anomaly_detector, platt_db=None, platt_rf=None, router_vectorizer=None, router_classifier=None) -> None:
+        self.router_vectorizer = router_vectorizer
+        self.router_classifier = router_classifier
+        
         self._injection_route = PromptInjectionRoute(
             behavioral_model=behavioral_model,
             vectorizer=vectorizer,
@@ -112,10 +115,10 @@ class ThreatRouter:
         Returns:
             RoutingDecision with the selected route name and its RouteResult.
         """
-        selected: BaseRoute = self._select_route(pattern_categories)
+        selected, conf = self._select_route(raw_prompt)
         logger.debug(
-            "ThreatRouter: dispatching to %s (pattern_score=%.1f, categories=%s)",
-            selected.route_name, pattern_score, pattern_categories,
+            "ThreatRouter: dispatching to %s (confidence=%.4f)",
+            selected.route_name, conf
         )
 
         result = selected.process(
@@ -124,19 +127,24 @@ class ThreatRouter:
             pattern_score=pattern_score,
             pattern_categories=pattern_categories,
         )
+        result.route_metadata['selected_route'] = selected.route_name
+        result.route_metadata['routing_confidence'] = float(conf)
         return RoutingDecision(selected_route=selected.route_name, route_result=result)
 
-    def _select_route(self, pattern_categories: List[str]) -> BaseRoute:
+    def _select_route(self, raw_prompt: str) -> Tuple[BaseRoute, float]:
         """
-        Routing decision function.
-
-        v9: returns CyberThreatRoute if any detected category is a known
-        cyber-threat type; otherwise defaults to PromptInjectionRoute.
+        Routing decision function via Semantic Router.
         """
-        detected = frozenset(c.lower() for c in pattern_categories)
-        if detected & _CYBER_CATEGORIES:
-            return self._cyber_route
-        return self._injection_route
+        if not self.router_vectorizer or not self.router_classifier:
+            return self._injection_route, 1.0
+            
+        x = self.router_vectorizer.transform([raw_prompt])
+        y = self.router_classifier.predict(x)[0]
+        conf = self.router_classifier.predict_proba(x)[0][y]
+        
+        if y == 1:
+            return self._cyber_route, conf
+        return self._injection_route, conf
 
     @property
     def injection_route(self) -> PromptInjectionRoute:

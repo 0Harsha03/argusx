@@ -82,6 +82,8 @@ class AdaptiveDetectionPipeline:
             anomaly_detector=registry.anomaly_detector,
             platt_db=registry.platt_db,
             platt_rf=registry.platt_rf,
+            router_vectorizer=registry.router_vectorizer,
+            router_classifier=registry.router_classifier,
         )
 
         # Layer 5: Threat Scoring (shared, unchanged)
